@@ -1,0 +1,15 @@
+GEN ELEC – CARNET DE BORD 
+
+ 
+
+1 – 11 – 2024 :  
+
+Première réunion : on se morfond dans la complexité du pdf qui nous a été fournie. 
+
+On a réussi à trouver la façon de généré l’arbre en pouvant tout de même l’équilibrer. 
+
+Le problème qui dérangeait était que lors de l’opération d’équilibrage de l’arbre des particuliers risquaient de se trouver relier au mauvais LV ou des etp au mauvais HV-A/HV-A. La solution trouver est d’équilibrer seulement des sous arbre de consommateurs.  
+
+On pense finalement crée plusieurs structures : HVA, HVB, LV, Consommateur avec un id pour savoir si on le conso est un particulier ou une etp. 
+
+Après cette phase de réflexion nous nous accordons sur l’environnement dans lequel nous allons coder notre projet (vs code  et github). 
