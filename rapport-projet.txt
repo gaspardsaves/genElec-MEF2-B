@@ -13,3 +13,9 @@ Le problème qui dérangeait était que lors de l’opération d’équilibrage 
 On pense finalement crée plusieurs structures : HVA, HVB, LV, Consommateur avec un id pour savoir si on le conso est un particulier ou une etp. 
 
 Après cette phase de réflexion nous nous accordons sur l’environnement dans lequel nous allons coder notre projet (vs code  et github). 
+
+
+1 - 12 - 2024 :
+
+On se décide à créer un avl pour chaque type de structures (HVA, HVB, LV). On pense crée des fichiers tampons qui permettraient de gérer chacun des types d'AVL.
+Nous en sommes finalement venu à se demander s'il était mieux de faire une ou plusieurs structures d'arbres.
