@@ -25,17 +25,17 @@ Lv* createLV(int id, int capacity, int consAll, int consCompanyLv, int consHouse
     return new;
 }
 
-Lv* InsertLV(Lv* pHead, int id, int capacity, int consAll, int consCompanyLv, int consHouseHold, int* h){
+Lv* insertLV(Lv* pHead, int id, int capacity, int consAll, int consCompanyLv, int consHouseHold, int* h){
     if(pHead == NULL){
         *h = 1;
         return createLV(id, capacity, consAll, consCompanyLv, consHouseHold);
     }
     else if(id < pHead->id){
-        pHead->pLeft = InsertLV(pHead->pLeft, id, capacity, consAll, consCompanyLv, consHouseHold, h);
+        pHead->pLeft = insertLV(pHead->pLeft, id, capacity, consAll, consCompanyLv, consHouseHold, h);
         *h = -*h;
     }
     else if(id > pHead->id){
-        pHead->pRight = InsertLV(pHead->pRight, id, capacity, consAll, consCompanyLv, consHouseHold, h);
+        pHead->pRight = insertLV(pHead->pRight, id, capacity, consAll, consCompanyLv, consHouseHold, h);
     }
     else{
         *h = 0;
@@ -52,6 +52,7 @@ Lv* InsertLV(Lv* pHead, int id, int capacity, int consAll, int consCompanyLv, in
             *h = 1;
         }
     }
+    return pHead;
 }
 
 

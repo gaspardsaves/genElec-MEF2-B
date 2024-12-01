@@ -33,5 +33,6 @@
 
     int checkLV(Lv* lv);
     Lv* createLV(int id, int capacity, int consAll, int consCompanyLv, int consHouseHold);
+    Lv* insertLV(Lv* pHead, int id, int capacity, int consAll, int consCompanyLv, int consHouseHold, int* h);
 
 #endif
