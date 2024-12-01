@@ -4,18 +4,22 @@ GEN ELEC – CARNET DE BORD
 
 1 – 11 – 2024 :  
 
-Première réunion : on se morfond dans la complexité du pdf qui nous a été fournie. 
-
-On a réussi à trouver la façon de généré l’arbre en pouvant tout de même l’équilibrer. 
-
-Le problème qui dérangeait était que lors de l’opération d’équilibrage de l’arbre des particuliers risquaient de se trouver relier au mauvais LV ou des etp au mauvais HV-A/HV-A. La solution trouver est d’équilibrer seulement des sous arbre de consommateurs.  
-
+Première réunion : on se morfond dans la complexité du pdf qui nous a été fourni
+On a réussi à trouver la façon de générer l’arbre en pouvant tout de même l’équilibrer. 
+Le problème qui dérangeait était que lors de l’opération d’équilibrage de l’arbre des particuliers risquaient de se trouver relier au mauvais LV ou des etp au mauvais HV-A/HV-A. La solution trouver est d’équilibrer seulement des sous arbre de consommateurs.
 On pense finalement crée plusieurs structures : HVA, HVB, LV, Consommateur avec un id pour savoir si on le conso est un particulier ou une etp. 
+Après cette phase de réflexion nous nous accordons sur l’environnement dans lequel nous allons coder notre projet (vs code  et github desktop).
 
-Après cette phase de réflexion nous nous accordons sur l’environnement dans lequel nous allons coder notre projet (vs code  et github). 
+Nous nous rendons compte de nos incompréhensions le projet est un peu plus facile qu'envisagé
+Nous rédigeons alors les structures.
 
 
 1 - 12 - 2024 :
 
 On se décide à créer un avl pour chaque type de structures (HVA, HVB, LV). On pense crée des fichiers tampons qui permettraient de gérer chacun des types d'AVL.
 Nous en sommes finalement venu à se demander s'il était mieux de faire une ou plusieurs structures d'arbres.
+Séparation des tâches et avancement des travaux
+Ibra et JL sur les AVL
+Gaspard sur le shell pour récupérer les LV, les HVA et les HVB (id et capacité) sur des fichiers tampons exploitables dans un second temps par le code C
+Gaspard gère aussi le makefile et les headers ainsi que les tests qui sont faits sur des petites et des grosses quantités de données et s'assure de leur bon traitement dans un temps correct
+Des problèmes de complexité se posent très rapidement sur le traitement des données par le script shell

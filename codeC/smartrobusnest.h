@@ -3,7 +3,7 @@
     #include <stddef.h>
     
     void verifpointer(void* p);
-    //void checkOpenFile(FILE* f);
+    void checkOpenFile(FILE* f);
     void checkWritingFile(int writeReturn);
     void checkCloseFile(int closeReturn);
     int better_scan(char * message);

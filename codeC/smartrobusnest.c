@@ -3,6 +3,7 @@
 #include <string.h>
 #include <errno.h>
 
+#include "smartrobusnest.h"
 
 //  Verify if the pointeur is not NULL
 void verifpointer(void* p){

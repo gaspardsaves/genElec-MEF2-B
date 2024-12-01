@@ -1,6 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <avl.h>
+
+#include "structures.h" 
+#include "avl.h"
+
 #define max(a,b) ((a)>(b) ? a : b)
 #define min(a,b) ((a)<(b) ? a : b)
 
@@ -12,13 +15,13 @@ int checkLV(Lv* lv){
 
 int checkHVA(HVa* hva){
     if( hva== NULL){
-        exit(1);
+        exit(2);
     }
 }
 
 int checkHVB(HVb* hvb){
     if(hvb == NULL){
-        exit(1);
+        exit(3);
     }
 }
 
@@ -221,7 +224,7 @@ Lv* BringBalanceLV(Lv* Tree){
             Tree = RotateRight(Tree);
         }
         else if((Tree->pLeft!=NULL)&&(Tree->pLeft->pLeft)){
-            Tree = RotationLeft(Tree);
+            Tree = RotateLeft(Tree);
         }
         else{
             printf("\narbre corompu comme la France (ne le prenez pas au premier degré, c'est juste une blague)\n");
