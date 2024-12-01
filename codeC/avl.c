@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include <stdlib.h>
 #include <avl.h>
 #define max(a,b) ((a)>(b) ? a : b)
@@ -155,7 +156,7 @@ HVa* insertHVA(HVa* pHead, int id, int capacity, int consCompanyHVa, int* h){
     return pHead;
 }
 
-void* RotateRight(Lv* Tree){
+Lv* RotateRight(Lv* Tree){
     if(Tree==NULL){
         exit(1);
     }
@@ -175,10 +176,6 @@ void* RotateRight(Lv* Tree){
     return Tree;
 }
 
-
-int main(){
-    return 0;
-}
 
 
 Lv* RotateLeft(Lv* Tree){
@@ -201,6 +198,41 @@ Lv* RotateLeft(Lv* Tree){
     return Tree;
 }
 
+Lv* BringBalanceLV(Lv* Tree){
+    if(Tree==NULL){
+        exit(4);
+    }
+    if(Tree->balanceFactor>=2){
+        if((Tree->pRight!=NULL)&&(Tree->pRight->pLeft!=NULL)){
+            Tree->pRight = RotateRight(Tree->pRight);
+            Tree = RotateLeft(Tree);
+        }
+        else if((Tree->pRight!=NULL)&&(Tree->pRight->pRight!=NULL)){
+            Tree = RotateLeft(Tree);
+        }
+        else{
+            printf("\nArbre corompu comme la France (ne le prenez pas au premier degré, c'est juste une blague)\n");
+            exit(6);
+        }
+    }
+    else if(Tree->balanceFactor<=(-2)){
+        if((Tree->pLeft!=NULL)&&(Tree->pLeft->pRight)){
+            Tree->pRight = RotateLeft(Tree->pRight);
+            Tree = RotateRight(Tree);
+        }
+        else if((Tree->pLeft!=NULL)&&(Tree->pLeft->pLeft)){
+            Tree = RotationLeft(Tree);
+        }
+        else{
+            printf("\narbre corompu comme la France (ne le prenez pas au premier degré, c'est juste une blague)\n");
+            exit(7);
+        }
+    }
+    return Tree;
+}
+
+
 int main(){
+    printf("hello");
     return 0;
 }
