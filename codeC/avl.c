@@ -55,6 +55,26 @@ Lv* insertLV(Lv* pHead, int id, int capacity, int consAll, int consCompanyLv, in
     return pHead;
 }
 
+void* RotateRight(Lv* Tree){
+    if(Tree==NULL){
+        exit(1);
+    }
+    if(Tree->pLeft==NULL){
+        exit(2);
+    }
+    int Balance_Tree = 0;
+    int Balance_Pivot = 0;
+    Lv* Pivot = Tree->pLeft;
+    Tree->pLeft = Pivot->pRight;
+    Pivot->pRight = Tree;
+    Balance_Tree = Tree->balanceFactor;
+    Balance_Pivot = Pivot->balanceFactor;
+    Tree->balanceFactor = Balance_Tree - min(Balance_Pivot, 0) + 1;
+    Pivot->balanceFactor = max(max(Balance_Tree+2, Balance_Tree + Balance_Pivot + 2), Balance_Pivot+1 );
+    Tree = Pivot;
+    return Tree;
+}
+
 
 int main(){
     return 0;
