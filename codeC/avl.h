@@ -29,6 +29,9 @@
         int balanceFactor;
         struct hv_b* pLeft;
         struct hv_b* pRight;
-    }HVb
+    }HVb;
+
+    int checkLV(Lv* lv);
+    Lv* createLV(int id, int capacity, int consAll, int consCompanyLv, int consHouseHold);
 
 #endif
