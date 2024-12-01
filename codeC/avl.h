@@ -1,37 +1,31 @@
 #ifndef VERIF
     #define VERIF
     #include <stddef.h> 
-    typedef struct _consumer {
-        int id;
-        int load;
-        struct _consumer* Left;
-        struct _consumer* Right;
-    }Consumer;
 
-    typedef struct {
+    typedef struct lv_post {
         int id;
         int capacity;
-        Consumer* consumerHead;
-    }LvPost;
+        int consAll;
+        int consCompanyLv;
+        int consHouseHold;
+        struct lv_post* pLeft;
+        struct lv_post* pRight;
+    }Lv;
 
-    typedef struct {
+    typedef struct hv_a {
         int id;
         int capacity;
-        LvPost* LvTab;
-        Consumer* consumerHead;
-    }HV_A;
+        int consCompanyHVa;
+        struct hv_a* pLeft;
+        struct hv_a* pRight;
+    }HVa;
 
-    typedef struct {
+    typedef struct hv_b {
         int id;
         int capacity;
-        HV_A* tab;
-        Consumer* consumerHead;
-    }HV_B;
+        int consCompanyHVb;
+        struct hv_b* pLeft;
+        struct hv_b* pRight;
+    }HVb
 
-    typedef struct {
-        int id;
-        int capacity;
-        HV_B* tab;
-        Consumer* consumerHead;
-    }PowerPlant;
 #endif
