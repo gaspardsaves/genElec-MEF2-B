@@ -9,6 +9,18 @@ int checkLV(Lv* lv){
     }
 }
 
+int checkHVA(HVa* hva){
+    if( hva== NULL){
+        exit(1);
+    }
+}
+
+int checkHVB(HVb* hvb){
+    if(hvb == NULL){
+        exit(1);
+    }
+}
+
 Lv* createLV(int id, int capacity, int consAll, int consCompanyLv, int consHouseHold){
     Lv* new = malloc(sizeof(Lv));
     checkLV(new);
@@ -18,6 +30,34 @@ Lv* createLV(int id, int capacity, int consAll, int consCompanyLv, int consHouse
     new->consAll = consAll;
     new->consCompanyLv = consCompanyLv;
     new->consHouseHold = consHouseHold;
+    new->balanceFactor = 0;
+    new->pLeft = NULL;
+    new->pRight = NULL;
+
+    return new;
+}
+
+HVb* createHVB(int id, int capacity, int consCompanyHVb){
+    HVb* new = malloc(sizeof(HVb));
+    checkHVB(new);
+
+    new->id = id;
+    new->capacity = capacity;
+    new->consCompanyHVb = consCompanyHVb;
+    new->balanceFactor = 0;
+    new->pLeft = NULL;
+    new->pRight = NULL;
+
+    return new;
+}
+
+HVa* createHVA(int id, int capacity, int consCompanyHVa){
+    HVa* new = malloc(sizeof(HVa));
+    checkHVA(new);
+
+    new->id = id;
+    new->capacity = capacity;
+    new->consCompanyHVa = consCompanyHVa;
     new->balanceFactor = 0;
     new->pLeft = NULL;
     new->pRight = NULL;
@@ -36,6 +76,66 @@ Lv* insertLV(Lv* pHead, int id, int capacity, int consAll, int consCompanyLv, in
     }
     else if(id > pHead->id){
         pHead->pRight = insertLV(pHead->pRight, id, capacity, consAll, consCompanyLv, consHouseHold, h);
+    }
+    else{
+        *h = 0;
+        return pHead;
+    }
+
+    if(*h != 0){
+        pHead->balanceFactor += *h;
+        //here is the rebalancing fonction for Phead : rebalancingLV(phead);
+        if(pHead->balanceFactor == 0){
+            *h = 0;
+        }
+        else{
+            *h = 1;
+        }
+    }
+    return pHead;
+}
+
+HVb* insertHVB(HVb* pHead, int id, int capacity, int consCompanyHVb, int* h){
+    if(pHead == NULL){
+        *h = 1;
+        return createHVB(id, capacity, consCompanyHVb);
+    }
+    else if(id < pHead->id){
+        pHead->pLeft = insertHVB(pHead->pLeft, id, capacity, consCompanyHVb, h);
+        *h = -*h;
+    }
+    else if(id > pHead->id){
+        pHead->pRight = insertHVB(pHead->pRight, id, capacity, consCompanyHVb, h);
+    }
+    else{
+        *h = 0;
+        return pHead;
+    }
+
+    if(*h != 0){
+        pHead->balanceFactor += *h;
+        //here is the rebalancing fonction for Phead : rebalancingLV(phead);
+        if(pHead->balanceFactor == 0){
+            *h = 0;
+        }
+        else{
+            *h = 1;
+        }
+    }
+    return pHead;
+}
+
+HVa* insertHVA(HVa* pHead, int id, int capacity, int consCompanyHVa, int* h){
+    if(pHead == NULL){
+        *h = 1;
+        return createHVA(id, capacity, consCompanyHVa);
+    }
+    else if(id < pHead->id){
+        pHead->pLeft = insertHVA(pHead->pLeft, id, capacity, consCompanyHVa, h);
+        *h = -*h;
+    }
+    else if(id > pHead->id){
+        pHead->pRight = insertHVA(pHead->pRight, id, capacity, consCompanyHVa, h);
     }
     else{
         *h = 0;
@@ -74,6 +174,12 @@ void* RotateRight(Lv* Tree){
     Tree = Pivot;
     return Tree;
 }
+
+
+int main(){
+    return 0;
+}
+
 
 Lv* RotateLeft(Lv* Tree){
     if(Tree==NULL){

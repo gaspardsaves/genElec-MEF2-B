@@ -32,6 +32,8 @@
     }HVb;
 
     int checkLV(Lv* lv);
+    int checkHVA(HVa* hva);
+    int checkHVB(HVb* hvb);
     Lv* createLV(int id, int capacity, int consAll, int consCompanyLv, int consHouseHold);
     Lv* insertLV(Lv* pHead, int id, int capacity, int consAll, int consCompanyLv, int consHouseHold, int* h);
 
