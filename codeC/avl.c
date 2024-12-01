@@ -75,6 +75,25 @@ void* RotateRight(Lv* Tree){
     return Tree;
 }
 
+Lv* RotateLeft(Lv* Tree){
+    if(Tree==NULL){
+        exit(1);
+    }
+    if(Tree->pLeft==NULL){
+        exit(2);
+    }
+    int Balance_Tree = 0;
+    int Balance_Pivot = 0;
+    Lv* Pivot = Tree->pRight;
+    Tree->pRight = Pivot->pLeft;
+    Pivot->pLeft = Tree;
+    Balance_Tree = Tree->balanceFactor;
+    Balance_Pivot = Pivot->balanceFactor;
+    Tree->balanceFactor = Balance_Tree - max(Balance_Pivot, 0) - 1;
+    Pivot->balanceFactor = min(min(Balance_Tree-2, Balance_Tree + Balance_Pivot - 2), Balance_Pivot-1 );
+    Tree = Pivot;
+    return Tree;
+}
 
 int main(){
     return 0;
