@@ -54,29 +54,21 @@ ElecEntity* BringBalance(ElecEntity* Tree){
         return Tree;
     }
     if(Tree->balanceFactor>=2){
-        if((Tree->pRight!=NULL)&&(Tree->pRight->pLeft!=NULL)){
+        if(Tree->pRight->balanceFactor>=0){
+            Tree = RotateLeft(Tree);
+        }
+        else{
             Tree->pRight = RotateRight(Tree->pRight);
             Tree = RotateLeft(Tree);
         }
-        else if((Tree->pRight!=NULL)&&(Tree->pRight->pRight!=NULL)){
-            Tree = RotateLeft(Tree);
-        }
-        else{
-            printf("\nArbre corompu\n");
-            exit(6);
-        }
     }
     else if(Tree->balanceFactor<=(-2)){
-        if((Tree->pLeft!=NULL)&&(Tree->pLeft->pRight)){
-            Tree->pLeft = RotateLeft(Tree->pLeft);
-            Tree = RotateRight(Tree);
-        }
-        else if((Tree->pLeft!=NULL)&&(Tree->pLeft->pLeft)){
+        if(Tree->pRight->balanceFactor<=0){
             Tree = RotateRight(Tree);
         }
         else{
-            printf("\narbre corompu\n");
-            exit(7);
+            Tree->pLeft = RotateLeft(Tree->pLeft);
+            Tree = RotateRight(Tree);
         }
     }
     return Tree;
@@ -110,7 +102,7 @@ ElecEntity* insert(ElecEntity* pHead, int id, int capacity, int consumption, int
     }
     else if(id < pHead->id){
         pHead->pLeft = insert(pHead->pLeft, id, capacity, consumption, powerPlant, h);
-        *h = -*h;
+        *h = (-1)*(*h);
     }
     else if(id > pHead->id){
         pHead->pRight = insert(pHead->pRight, id, capacity, consumption, powerPlant, h);
@@ -121,6 +113,7 @@ ElecEntity* insert(ElecEntity* pHead, int id, int capacity, int consumption, int
     }
     if(*h != 0){
         pHead->balanceFactor += *h;
+        pHead = BringBalance(pHead);
         //here is the rebalancing fonction for Phead : rebalancin(phead);
         if(pHead->balanceFactor == 0){
             *h = 0;
@@ -129,7 +122,6 @@ ElecEntity* insert(ElecEntity* pHead, int id, int capacity, int consumption, int
             *h = 1;
         }
     }
-    pHead = BringBalance(pHead);
     return pHead;
 }
 
@@ -148,6 +140,17 @@ int main(){
     int* h = malloc(sizeof(int));
     Tree = insert(Tree, 2, 100000, 2000, 1, h);
     Tree = insert(Tree, 3, 100000, 2000, 1, h);
+    Tree = insert(Tree, 4, 100000, 2000, 1, h);
+    Tree = insert(Tree, 5, 100000, 2000, 1, h);
+    Tree = insert(Tree, 6, 100000, 2000, 1, h);
+    Tree = insert(Tree, 7, 100000, 2000, 1, h);
+    Tree = insert(Tree, 8, 100000, 2000, 1, h);
+    Tree = insert(Tree, 9, 100000, 2000, 1, h);
+    int i = 10;
+    while(i<1000000){
+        Tree = insert(Tree, i, 100000, 2000, 1, h);
+        i++;
+    }
     PrintPrefix(Tree);
     return 0;
 }
