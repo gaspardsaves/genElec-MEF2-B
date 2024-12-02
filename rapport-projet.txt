@@ -23,3 +23,8 @@ Ibra et JL sur les AVL
 Gaspard sur le shell pour récupérer les LV, les HVA et les HVB (id et capacité) sur des fichiers tampons exploitables dans un second temps par le code C
 Gaspard gère aussi le makefile et les headers ainsi que les tests qui sont faits sur des petites et des grosses quantités de données et s'assure de leur bon traitement dans un temps correct
 Des problèmes de complexité se posent très rapidement sur le traitement des données par le script shell
+
+2 -12 - 24 :
+Modif header structures pour traiter une entité électrique sans se soucier de ce que c'est et de même pour compter le consommation
+Modif shell pour utiliser grep et ne pas avoir de boucle ce qui améliore significativement la complexité
+Implémentation de l'aide dans les paramétres
