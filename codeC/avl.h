@@ -6,10 +6,10 @@
     ElecEntity* RotateLeft(ElecEntity* Tree);
     ElecEntity* BringBalance(ElecEntity* Tree);
     int check(ElecEntity* Tree);
-    ElecEntity* create(int id, int capacity, int consumption);
-    ElecEntity* insert(ElecEntity* pHead, int id, int capacity, int consumption, int* h);
+    ElecEntity* create(int id, int capacity, int consumption, int powerPlant);
+    ElecEntity* insert(ElecEntity* pHead, int id, int capacity, int consumption, int powerPlant, int* h);
     void PrintPrefix(ElecEntity* Tree);
-    
+
     int main();
 
 #endif
