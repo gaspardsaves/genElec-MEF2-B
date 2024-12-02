@@ -7,16 +7,64 @@
         if [[ "$arg" == "-h" || "$arg" == "--help" ]] ; then
             echo "Option d'aide détectée"
             cat "help.txt"
+            exit 101
         fi
     done
 
-    # Name and adress of the input file
-    #inputFile="./inputs/c-wire_v00.dat"
-    #inputFile="./inputs/c-wire_v25.dat"
-    inputFile="$1"
+    # Checking the minimum number of arguments
+    if [[ $# -lt 3 ]] ; then
+        echo "Nombre d'arguments insuffisant"
+        echo "Utilisez -h ou --help pour afficher l'aide."
+        exit 102
+    fi
 
-    typeConso="$2"
-    case "$typeConso" in
+    # Assignement and checking consistency of arguments
+        # Adress of the input file
+        #inputFile="./inputs/c-wire_v00.dat"
+        #inputFile="./inputs/c-wire_v25.dat"
+        inputFile="$1"
+
+        # Checking the existence and the possibility of reading the file
+        if [[ ! ( -f "$inputFile" ) ]] ; then
+            echo "Le fichier de données n'existe pas à cet emplacement"
+            exit 103
+        elif [[  ! ( -r "$inputFile" ) ]] ; then
+            echo "Droit de lecture manquant sur ce fichier."
+            echo "Veuillez corriger les permissions et réitérer la demande."
+            exit 104
+        fi
+
+        # Type of electric post to be treated (hvb, hva, lv)
+        typeStation="$2"
+
+        # Checking validity of the second argument
+        # à faire
+
+        # Type of consumer to be treated
+        typeCons="$3"
+
+        # Checking validity of the third argument
+        # à faire
+
+        # Checking argument combinations
+        if [[ "$typeStation" == "hvb" && "$typeCons" != "comp" ]] ; then
+            echo "La station HV-B n'a pour consommateur que des entreprises (argument 'comp')"
+            echo "Utilisez -h ou --help pour afficher l'aide."
+            exit 104
+        elif [[ "$typeStation" == "hva" && "$typeCons" != "comp" ]] ; then
+            echo "La station HV-A n'a pour consommateur que des entreprises (argument 'comp')"
+            echo "Utilisez -h ou --help pour afficher l'aide."
+            exit 105
+        fi
+
+        echo "Arguments corrects"
+        if [[ $# = 3 ]] ; then
+            echo "Nous étudions les consommateurs '$typeCons' branchés sur les '$typeStation' du fichier '$inputFile'."
+        elif [[ $# = 4 ]] ; then
+            echo "Nous étudions les consommateurs '$typeCons' branchés sur les '$typeStation' de la centrale numéro $pwrPlantNbr du fichier '$inputFile'."
+        fi
+
+    case "$typeStation" in
         'lv' )
             # LV data
             # Name and address of the lv buffer file
