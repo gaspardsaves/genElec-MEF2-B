@@ -135,15 +135,6 @@ void PrintPrefix(ElecEntity* Tree){
     PrintPrefix(Tree->pRight);
 }
 
-Lv* createLV()
-
-Lv* insertAVLLV(Lv* lvHead, Lv* lvNew, int h*){
-    if(lvHead == NULL){
-        *h = 1;
-        return 
-    }
-}
-
 int main(){
     ElecEntity* Tree = create(1, 200000, 177, 1);
     int* h = malloc(sizeof(int));
