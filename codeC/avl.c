@@ -88,13 +88,14 @@ int check(ElecEntity* Tree){
     }
 }
 
-ElecEntity* create(int id, int capacity, int consumption){
+ElecEntity* create(int id, int capacity, int consumption, int powerPlant){
     ElecEntity* new = malloc(sizeof(ElecEntity));
     check(new);
 
     new->id = id;
     new->capacity = capacity;
     new->consumption = consumption;
+    new->powerPlant = powerPlant;
     new->balanceFactor = 0;
     new->pLeft = NULL;
     new->pRight = NULL;
@@ -102,17 +103,17 @@ ElecEntity* create(int id, int capacity, int consumption){
     return new;
 }
 
-ElecEntity* insert(ElecEntity* pHead, int id, int capacity, int consumption, int* h){
+ElecEntity* insert(ElecEntity* pHead, int id, int capacity, int consumption, int powerPlant, int* h){
     if(pHead == NULL){
         *h = 1;
-        return create(id, capacity, consumption);
+        return create(id, capacity, consumption, powerPlant);
     }
     else if(id < pHead->id){
-        pHead->pLeft = insert(pHead->pLeft, id, capacity, consumption, h);
+        pHead->pLeft = insert(pHead->pLeft, id, capacity, consumption, powerPlant, h);
         *h = -*h;
     }
     else if(id > pHead->id){
-        pHead->pRight = insert(pHead->pRight, id, capacity, consumption, h);
+        pHead->pRight = insert(pHead->pRight, id, capacity, consumption, powerPlant, h);
     }
     else{
         *h = 0;
@@ -137,16 +138,16 @@ void PrintPrefix(ElecEntity* Tree){
     if(Tree==NULL){
         return ;
     }
-    printf(" : id = %d, balance = %d]\n", Tree->id, Tree->balanceFactor);
+    printf("[ElecEntity : id = %d, balance = %d]\n", Tree->id, Tree->balanceFactor);
     PrintPrefix(Tree->pLeft);
     PrintPrefix(Tree->pRight);
 }
 
 int main(){
-    ElecEntity* Tree = create(1, 200000, 177);
+    ElecEntity* Tree = create(1, 200000, 177, 1);
     int* h = malloc(sizeof(int));
-    Tree = insert(Tree, 2, 100000, 2000, h);
-    Tree = insert(Tree, 3, 100000, 2000, h);
+    Tree = insert(Tree, 2, 100000, 2000, 1, h);
+    Tree = insert(Tree, 3, 100000, 2000, 1, h);
     PrintPrefix(Tree);
     return 0;
 }
