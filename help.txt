@@ -1,4 +1,56 @@
-Le script shell prend au minimum 3 arguments :
-- L'adresse du fichier de données
-- Le type de station
-- Le type de consommateur
+Arguments :
+
+    Argument 1 : Chemin du fichier de données
+        Représente le chemin d'accès au fichier contenant les données à traiter.
+        Peut être spécifié sous forme :
+            Absolue  : /chemin/vers/fichier/depuis/mon/home
+            Relative : ./chemin/vers/fichier/depuis/mon/repertoire/actuel
+        Pour utiliser le fichier de base qui était fourni : ./inputs/c-wire_v25.dat
+
+    Argument 2 : Type de station
+        Définit la catégorie de station concernée. Les valeurs possibles sont :
+            hvb : High-voltage B
+            hva : High-voltage A
+            lv  : Low-voltage
+
+    Argument 3 : Type de consommateur
+        Définit le type de consommateurs ciblés. Les valeurs possibles sont :
+            comp  : Entreprises
+            indiv : Particuliers
+            all   : Tous les consommateurs
+
+    Combinaisons valides pour les arguments 2 et 3 :
+        hvb comp : Consommateurs entreprises branchés sur HV-B
+        hva comp : Consommateurs entreprises branchés sur HV-A
+        lv all   : Tout les consommateurs branchés sur LV
+        lv indiv : Consommateurs particuliers branchés sur LV
+        lv comp  : Consommateurs entreprises branchés sur LV
+
+    Toute autre combinaison entraînera l'affichage d’un message d'erreur.
+
+    Argument 4 (optionnel) : Numéro de centrale
+        Permet de filtrer les données en fonction d’une centrale spécifique.
+        Doit être un entier compris entre 1 et 5 inclus.
+        Applicable pour tout les types de station.
+        Si cet argument est fourni, seuls les HV-B, HV-A ou LV approvisionnés par la centrale spécifiée seront traités.
+
+    Argument d’aide (optionnel) : Afficher le message d’aide
+        Utilisez les options suivantes, quel que soit leur position dans la liste des arguments :
+            -h
+            --help
+        Si une de ces options est spécifiée, le script affichera ce message d’aide et ignorera les autres arguments.
+
+Exemples :    
+    Exemple avec tous les arguments obligatoires :
+        ./script.sh ./inputs/c-wire_v25.dat hvb comp
+
+    Exemple avec l'argument optionnel :
+        ./script.sh ./inputs/c-wire_v25.dat lv all 3
+
+    Affichage de l'aide :
+        ./script.sh -h
+        ./script.sh --help
+
+Notes :
+    - Veillez à toujours fournir les arguments obligatoires dans l'ordre spécifié.
+    - En cas de combinaison d’arguments invalide ou de problème avec les valeurs des arguments, le script affichera un message d’erreur explicatif.
