@@ -7,7 +7,7 @@
 #define max(a,b) ((a)>(b) ? a : b)
 #define min(a,b) ((a)<(b) ? a : b)
 
-Lv* RotateRight(Lv* Tree){
+ElecEntity* RotateRight(ElecEntity* Tree){
     if(Tree==NULL){
         exit(1);
     }
@@ -16,7 +16,7 @@ Lv* RotateRight(Lv* Tree){
     }
     int Balance_Tree = 0;
     int Balance_Pivot = 0;
-    Lv* Pivot = Tree->pLeft;
+    ElecEntity* Pivot = Tree->pLeft;
     Tree->pLeft = Pivot->pRight;
     Pivot->pRight = Tree;
     Balance_Tree = Tree->balanceFactor;
@@ -29,7 +29,7 @@ Lv* RotateRight(Lv* Tree){
 
 
 
-Lv* RotateLeft(Lv* Tree){
+ElecEntity* RotateLeft(ElecEntity* Tree){
     if(Tree==NULL){
         exit(1);
     }
@@ -38,7 +38,7 @@ Lv* RotateLeft(Lv* Tree){
     }
     int Balance_Tree = 0;
     int Balance_Pivot = 0;
-    Lv* Pivot = Tree->pRight;
+    ElecEntity* Pivot = Tree->pRight;
     Tree->pRight = Pivot->pLeft;
     Pivot->pLeft = Tree;
     Balance_Tree = Tree->balanceFactor;
@@ -49,7 +49,7 @@ Lv* RotateLeft(Lv* Tree){
     return Tree;
 }
 
-Lv* BringBalanceLV(Lv* Tree){
+ElecEntity* BringBalance(ElecEntity* Tree){
     if(Tree==NULL){
         return Tree;
     }
@@ -82,33 +82,19 @@ Lv* BringBalanceLV(Lv* Tree){
     return Tree;
 }
 
-int checkLV(Lv* lv){
-    if(lv == NULL){
+int check(ElecEntity* Tree){
+    if (Tree == NULL){
         exit(1);
     }
 }
 
-int checkHVA(HVa* hva){
-    if( hva== NULL){
-        exit(2);
-    }
-}
-
-int checkHVB(HVb* hvb){
-    if(hvb == NULL){
-        exit(3);
-    }
-}
-
-Lv* createLV(int id, int capacity, int consAll, int consCompanyLv, int consHouseHold){
-    Lv* new = malloc(sizeof(Lv));
-    checkLV(new);
+ElecEntity* create(int id, int capacity, int consumption){
+    ElecEntity* new = malloc(sizeof(ElecEntity));
+    check(new);
 
     new->id = id;
     new->capacity = capacity;
-    new->consAll = consAll;
-    new->consCompanyLv = consCompanyLv;
-    new->consHouseHold = consHouseHold;
+    new->consumption = consumption;
     new->balanceFactor = 0;
     new->pLeft = NULL;
     new->pRight = NULL;
@@ -116,45 +102,17 @@ Lv* createLV(int id, int capacity, int consAll, int consCompanyLv, int consHouse
     return new;
 }
 
-HVb* createHVB(int id, int capacity, int consCompanyHVb){
-    HVb* new = malloc(sizeof(HVb));
-    checkHVB(new);
-
-    new->id = id;
-    new->capacity = capacity;
-    new->consCompanyHVb = consCompanyHVb;
-    new->balanceFactor = 0;
-    new->pLeft = NULL;
-    new->pRight = NULL;
-
-    return new;
-}
-
-HVa* createHVA(int id, int capacity, int consCompanyHVa){
-    HVa* new = malloc(sizeof(HVa));
-    checkHVA(new);
-
-    new->id = id;
-    new->capacity = capacity;
-    new->consCompanyHVa = consCompanyHVa;
-    new->balanceFactor = 0;
-    new->pLeft = NULL;
-    new->pRight = NULL;
-
-    return new;
-}
-
-Lv* insertLV(Lv* pHead, int id, int capacity, int consAll, int consCompanyLv, int consHouseHold, int* h){
+ElecEntity* insert(ElecEntity* pHead, int id, int capacity, int consumption, int* h){
     if(pHead == NULL){
         *h = 1;
-        return createLV(id, capacity, consAll, consCompanyLv, consHouseHold);
+        return create(id, capacity, consumption);
     }
     else if(id < pHead->id){
-        pHead->pLeft = insertLV(pHead->pLeft, id, capacity, consAll, consCompanyLv, consHouseHold, h);
+        pHead->pLeft = insert(pHead->pLeft, id, capacity, consumption, h);
         *h = -*h;
     }
     else if(id > pHead->id){
-        pHead->pRight = insertLV(pHead->pRight, id, capacity, consAll, consCompanyLv, consHouseHold, h);
+        pHead->pRight = insert(pHead->pRight, id, capacity, consumption, h);
     }
     else{
         *h = 0;
@@ -162,7 +120,7 @@ Lv* insertLV(Lv* pHead, int id, int capacity, int consAll, int consCompanyLv, in
     }
     if(*h != 0){
         pHead->balanceFactor += *h;
-        //here is the rebalancing fonction for Phead : rebalancingLV(phead);
+        //here is the rebalancing fonction for Phead : rebalancin(phead);
         if(pHead->balanceFactor == 0){
             *h = 0;
         }
@@ -170,84 +128,25 @@ Lv* insertLV(Lv* pHead, int id, int capacity, int consAll, int consCompanyLv, in
             *h = 1;
         }
     }
-    pHead = BringBalanceLV(pHead);
+    pHead = BringBalance(pHead);
     return pHead;
 }
 
-HVb* insertHVB(HVb* pHead, int id, int capacity, int consCompanyHVb, int* h){
-    if(pHead == NULL){
-        *h = 1;
-        return createHVB(id, capacity, consCompanyHVb);
-    }
-    else if(id < pHead->id){
-        pHead->pLeft = insertHVB(pHead->pLeft, id, capacity, consCompanyHVb, h);
-        *h = -*h;
-    }
-    else if(id > pHead->id){
-        pHead->pRight = insertHVB(pHead->pRight, id, capacity, consCompanyHVb, h);
-    }
-    else{
-        *h = 0;
-        return pHead;
-    }
 
-    if(*h != 0){
-        pHead->balanceFactor += *h;
-        //here is the rebalancing fonction for Phead : rebalancingLV(phead);
-        if(pHead->balanceFactor == 0){
-            *h = 0;
-        }
-        else{
-            *h = 1;
-        }
-    }
-    return pHead;
-}
-
-HVa* insertHVA(HVa* pHead, int id, int capacity, int consCompanyHVa, int* h){
-    if(pHead == NULL){
-        *h = 1;
-        return createHVA(id, capacity, consCompanyHVa);
-    }
-    else if(id < pHead->id){
-        pHead->pLeft = insertHVA(pHead->pLeft, id, capacity, consCompanyHVa, h);
-        *h = -*h;
-    }
-    else if(id > pHead->id){
-        pHead->pRight = insertHVA(pHead->pRight, id, capacity, consCompanyHVa, h);
-    }
-    else{
-        *h = 0;
-        return pHead;
-    }
-
-    if(*h != 0){
-        pHead->balanceFactor += *h;
-        //here is the rebalancing fonction for Phead : rebalancingLV(phead);
-        if(pHead->balanceFactor == 0){
-            *h = 0;
-        }
-        else{
-            *h = 1;
-        }
-    }
-    return pHead;
-}
-
-void PrintPrefixLV(Lv* Tree){
+void PrintPrefix(ElecEntity* Tree){
     if(Tree==NULL){
         return ;
     }
-    printf("[Lv : id = %d, balance = %d]\n", Tree->id, Tree->balanceFactor);
-    PrintPrefixLV(Tree->pLeft);
-    PrintPrefixLV(Tree->pRight);
+    printf(" : id = %d, balance = %d]\n", Tree->id, Tree->balanceFactor);
+    PrintPrefix(Tree->pLeft);
+    PrintPrefix(Tree->pRight);
 }
 
 int main(){
-    Lv* Tree = createLV(1, 200000, 1777, 300, 4000);
+    ElecEntity* Tree = create(1, 200000, 177);
     int* h = malloc(sizeof(int));
-    Tree = insertLV(Tree, 2, 100000, 2000, 3000, 700, h);
-    Tree = insertLV(Tree, 3, 100000, 2000, 3000, 700, h);
-    PrintPrefixLV(Tree);
+    Tree = insert(Tree, 2, 100000, 2000, h);
+    Tree = insert(Tree, 3, 100000, 2000, h);
+    PrintPrefix(Tree);
     return 0;
 }
