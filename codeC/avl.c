@@ -7,6 +7,81 @@
 #define max(a,b) ((a)>(b) ? a : b)
 #define min(a,b) ((a)<(b) ? a : b)
 
+Lv* RotateRight(Lv* Tree){
+    if(Tree==NULL){
+        exit(1);
+    }
+    if(Tree->pLeft==NULL){
+        exit(2);
+    }
+    int Balance_Tree = 0;
+    int Balance_Pivot = 0;
+    Lv* Pivot = Tree->pLeft;
+    Tree->pLeft = Pivot->pRight;
+    Pivot->pRight = Tree;
+    Balance_Tree = Tree->balanceFactor;
+    Balance_Pivot = Pivot->balanceFactor;
+    Tree->balanceFactor = Balance_Tree - min(Balance_Pivot, 0) + 1;
+    Pivot->balanceFactor = max(max(Balance_Tree+2, Balance_Tree + Balance_Pivot + 2), Balance_Pivot+1 );
+    Tree = Pivot;
+    return Tree;
+}
+
+
+
+Lv* RotateLeft(Lv* Tree){
+    if(Tree==NULL){
+        exit(1);
+    }
+    if(Tree->pRight==NULL){
+        exit(2);
+    }
+    int Balance_Tree = 0;
+    int Balance_Pivot = 0;
+    Lv* Pivot = Tree->pRight;
+    Tree->pRight = Pivot->pLeft;
+    Pivot->pLeft = Tree;
+    Balance_Tree = Tree->balanceFactor;
+    Balance_Pivot = Pivot->balanceFactor;
+    Tree->balanceFactor = Balance_Tree - max(Balance_Pivot, 0) - 1;
+    Pivot->balanceFactor = min(min(Balance_Tree-2, Balance_Tree + Balance_Pivot - 2), Balance_Pivot-1 );
+    Tree = Pivot;
+    return Tree;
+}
+
+Lv* BringBalanceLV(Lv* Tree){
+    if(Tree==NULL){
+        return Tree;
+    }
+    if(Tree->balanceFactor>=2){
+        if((Tree->pRight!=NULL)&&(Tree->pRight->pLeft!=NULL)){
+            Tree->pRight = RotateRight(Tree->pRight);
+            Tree = RotateLeft(Tree);
+        }
+        else if((Tree->pRight!=NULL)&&(Tree->pRight->pRight!=NULL)){
+            Tree = RotateLeft(Tree);
+        }
+        else{
+            printf("\nArbre corompu\n");
+            exit(6);
+        }
+    }
+    else if(Tree->balanceFactor<=(-2)){
+        if((Tree->pLeft!=NULL)&&(Tree->pLeft->pRight)){
+            Tree->pLeft = RotateLeft(Tree->pLeft);
+            Tree = RotateRight(Tree);
+        }
+        else if((Tree->pLeft!=NULL)&&(Tree->pLeft->pLeft)){
+            Tree = RotateRight(Tree);
+        }
+        else{
+            printf("\narbre corompu\n");
+            exit(7);
+        }
+    }
+    return Tree;
+}
+
 int checkLV(Lv* lv){
     if(lv == NULL){
         exit(1);
@@ -85,7 +160,6 @@ Lv* insertLV(Lv* pHead, int id, int capacity, int consAll, int consCompanyLv, in
         *h = 0;
         return pHead;
     }
-
     if(*h != 0){
         pHead->balanceFactor += *h;
         //here is the rebalancing fonction for Phead : rebalancingLV(phead);
@@ -96,6 +170,7 @@ Lv* insertLV(Lv* pHead, int id, int capacity, int consAll, int consCompanyLv, in
             *h = 1;
         }
     }
+    pHead = BringBalanceLV(pHead);
     return pHead;
 }
 
@@ -159,83 +234,20 @@ HVa* insertHVA(HVa* pHead, int id, int capacity, int consCompanyHVa, int* h){
     return pHead;
 }
 
-Lv* RotateRight(Lv* Tree){
+void PrintPrefixLV(Lv* Tree){
     if(Tree==NULL){
-        exit(1);
+        return ;
     }
-    if(Tree->pLeft==NULL){
-        exit(2);
-    }
-    int Balance_Tree = 0;
-    int Balance_Pivot = 0;
-    Lv* Pivot = Tree->pLeft;
-    Tree->pLeft = Pivot->pRight;
-    Pivot->pRight = Tree;
-    Balance_Tree = Tree->balanceFactor;
-    Balance_Pivot = Pivot->balanceFactor;
-    Tree->balanceFactor = Balance_Tree - min(Balance_Pivot, 0) + 1;
-    Pivot->balanceFactor = max(max(Balance_Tree+2, Balance_Tree + Balance_Pivot + 2), Balance_Pivot+1 );
-    Tree = Pivot;
-    return Tree;
+    printf("[Lv : id = %d, balance = %d]\n", Tree->id, Tree->balanceFactor);
+    PrintPrefixLV(Tree->pLeft);
+    PrintPrefixLV(Tree->pRight);
 }
-
-
-
-Lv* RotateLeft(Lv* Tree){
-    if(Tree==NULL){
-        exit(1);
-    }
-    if(Tree->pLeft==NULL){
-        exit(2);
-    }
-    int Balance_Tree = 0;
-    int Balance_Pivot = 0;
-    Lv* Pivot = Tree->pRight;
-    Tree->pRight = Pivot->pLeft;
-    Pivot->pLeft = Tree;
-    Balance_Tree = Tree->balanceFactor;
-    Balance_Pivot = Pivot->balanceFactor;
-    Tree->balanceFactor = Balance_Tree - max(Balance_Pivot, 0) - 1;
-    Pivot->balanceFactor = min(min(Balance_Tree-2, Balance_Tree + Balance_Pivot - 2), Balance_Pivot-1 );
-    Tree = Pivot;
-    return Tree;
-}
-
-Lv* BringBalanceLV(Lv* Tree){
-    if(Tree==NULL){
-        exit(4);
-    }
-    if(Tree->balanceFactor>=2){
-        if((Tree->pRight!=NULL)&&(Tree->pRight->pLeft!=NULL)){
-            Tree->pRight = RotateRight(Tree->pRight);
-            Tree = RotateLeft(Tree);
-        }
-        else if((Tree->pRight!=NULL)&&(Tree->pRight->pRight!=NULL)){
-            Tree = RotateLeft(Tree);
-        }
-        else{
-            printf("\nArbre corompu comme la France (ne le prenez pas au premier degré, c'est juste une blague)\n");
-            exit(6);
-        }
-    }
-    else if(Tree->balanceFactor<=(-2)){
-        if((Tree->pLeft!=NULL)&&(Tree->pLeft->pRight)){
-            Tree->pRight = RotateLeft(Tree->pRight);
-            Tree = RotateRight(Tree);
-        }
-        else if((Tree->pLeft!=NULL)&&(Tree->pLeft->pLeft)){
-            Tree = RotateLeft(Tree);
-        }
-        else{
-            printf("\narbre corompu comme la France (ne le prenez pas au premier degré, c'est juste une blague)\n");
-            exit(7);
-        }
-    }
-    return Tree;
-}
-
 
 int main(){
-    printf("hello");
+    Lv* Tree = createLV(1, 200000, 1777, 300, 4000);
+    int* h = malloc(sizeof(int));
+    Tree = insertLV(Tree, 2, 100000, 2000, 3000, 700, h);
+    Tree = insertLV(Tree, 3, 100000, 2000, 3000, 700, h);
+    PrintPrefixLV(Tree);
     return 0;
 }
