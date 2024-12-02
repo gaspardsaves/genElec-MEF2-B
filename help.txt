@@ -1,0 +1,4 @@
+Le script shell prend au minimum 3 arguments :
+- L'adresse du fichier de données
+- Le type de station
+- Le type de consommateur
