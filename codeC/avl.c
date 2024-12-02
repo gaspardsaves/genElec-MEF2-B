@@ -235,6 +235,15 @@ Lv* BringBalanceLV(Lv* Tree){
 }
 
 
+Lv* createLV()
+
+Lv* insertAVLLV(Lv* lvHead, Lv* lvNew, int h*){
+    if(lvHead == NULL){
+        *h = 1;
+        return 
+    }
+}
+
 int main(){
     printf("hello");
     return 0;
