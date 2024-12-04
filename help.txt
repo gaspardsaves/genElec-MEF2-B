@@ -1,5 +1,7 @@
 Arguments :
 
+    Le script shell prend au minimum 3 arguments.
+
     Argument 1 : Chemin du fichier de données
         Représente le chemin d'accès au fichier contenant les données à traiter.
         Peut être spécifié sous forme :
