@@ -109,6 +109,7 @@ ElecEntity* insert(ElecEntity* pHead, int id, int capacity, int consumption, int
     }
     else{
         *h = 0;
+        pHead->consumption += consumption;
         return pHead;
     }
     if(*h != 0){
@@ -130,27 +131,32 @@ void PrintPrefix(ElecEntity* Tree){
     if(Tree==NULL){
         return ;
     }
-    printf("[ElecEntity : id = %d, balance = %d]\n", Tree->id, Tree->balanceFactor);
+    printf("[ElecEntity : id = %d, capacity = %d, consumption = %d, balance = %d]\n", Tree->id, Tree->capacity, Tree->consumption, Tree->balanceFactor);
     PrintPrefix(Tree->pLeft);
     PrintPrefix(Tree->pRight);
 }
 
-int main(){
-    ElecEntity* Tree = create(1, 200000, 177, 1);
-    int* h = malloc(sizeof(int));
-    Tree = insert(Tree, 2, 100000, 2000, 1, h);
-    Tree = insert(Tree, 3, 100000, 2000, 1, h);
-    Tree = insert(Tree, 4, 100000, 2000, 1, h);
-    Tree = insert(Tree, 5, 100000, 2000, 1, h);
-    Tree = insert(Tree, 6, 100000, 2000, 1, h);
-    Tree = insert(Tree, 7, 100000, 2000, 1, h);
-    Tree = insert(Tree, 8, 100000, 2000, 1, h);
-    Tree = insert(Tree, 9, 100000, 2000, 1, h);
-    int i = 10;
-    while(i<1000000){
-        Tree = insert(Tree, i, 100000, 2000, 1, h);
-        i++;
+void FreeTree(ElecEntity* Tree){
+    if(Tree!=NULL){
+        FreeTree(Tree->pLeft);
+        FreeTree(Tree->pRight);
+        free(Tree);
     }
+}
+
+int main(){
+    ElecEntity* Tree = create(1, 160000, 0, 1);
+    int* h = malloc(sizeof(int));
+    Tree = insert(Tree, 1, 0, 2000, 1, h);
+    Tree = insert(Tree, 2, 0, 2000, 1, h);
+    Tree = insert(Tree, 1, 0, 2000, 1, h);
+    Tree = insert(Tree, 1, 0, 2000, 1, h);
+    Tree = insert(Tree, 1, 0, 2000, 1, h);
+    Tree = insert(Tree, 3, 0, 2000, 1, h);
+    Tree = insert(Tree, 1, 0, 2000, 1, h);
+    Tree = insert(Tree, 1, 0, 2000, 1, h);
+    PrintPrefix(Tree);
+    FreeTree(Tree);
     PrintPrefix(Tree);
     return 0;
 }
