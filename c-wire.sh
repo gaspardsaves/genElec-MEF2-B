@@ -74,7 +74,7 @@
 
         # Assigning and checking validity of the fourth argument if it's present
         if [[ $# = 4 ]] ; then
-            $pwrPlantNbr="$4"
+            pwrPlantNbr="$4"
             if [[ "$pwrPlantNbr" != "1" && "$pwrPlantNbr" != "2" && "$pwrPlantNbr" != "3" && "$pwrPlantNbr" != "4" && "$pwrPlantNbr" != "5" ]] ; then
                 echo "Le numéro de centrale est incorrect."
                 echo "Utilisez -h ou --help pour afficher l'aide."
@@ -84,8 +84,18 @@
             echo "Arguments corrects"
             echo "Nous étudions les consommateurs '$typeCons' branchés sur les '$typeStation' de la centrale numéro $pwrPlantNbr du fichier '$inputFile'."
         elif [[ $# = 3 ]] ; then
+            # Assign neutral value to the power plant number
+            pwrPlantNbr='[0-9]+'
             echo "Nous étudions les consommateurs '$typeCons' branchés sur les '$typeStation' du fichier '$inputFile'."
         fi
+
+# Vérif tmp / graphs existance + vider si nécéssaire
+    
+
+# Compilation of the code C
+    make -C ./codeC
+
+    # Vérif make
 
     case "$typeStation" in
         'lv' )
@@ -97,7 +107,7 @@
             # Read every line (except the first (categories)) of the input file
             # Check if it's a LV (column 4 and 7 not empty (different of '-'))
             # Add columns 1, 4 and 7 in the lv buffer file
-            grep -E "^[^-]+;-;[^-]+;[^-]+;-;-;[^-]+;-$" "$inputFile" | cut -d ";" -f1,3,4,7 >> "$outputFileLv"
+            grep -E "^$pwrPlantNbr;-;[^-]+;[^-]+;-;-;[^-]+;-$" "$inputFile" | cut -d ";" -f1,3,4,7 >> "$outputFileLv"
             # Success
             echo "Extraction terminée. Les données LV sont dans $outputFileLv"
         ;;
@@ -111,7 +121,7 @@
             # Read every line (except the first (categories)) of the input file
             # Check if it's a HV-A (column 3 and 7 not empty (different of '-') and column 4 empty)
             # Add columns 1, 2, 3 and 7 in the HV-A buffer file
-            grep -E "^[^-]+;[^-]+;[^-]+;-;-;-;[^-]+;-$" "$inputFile" | cut -d ";" -f1,2,3,7 >> "$outputFileHva"
+            grep -E "^$pwrPlantNbr;[^-]+;[^-]+;-;-;-;[^-]+;-$" "$inputFile" | cut -d ";" -f1,2,3,7 >> "$outputFileHva"
             # Success
             echo "Extraction terminée. Les données HV-A sont dans $outputFileHva"
         ;;
@@ -125,7 +135,7 @@
             # Read every line (except the first (categories)) of the input file
             # Check if it's a HV-B (column 2 and 7 not empty (different of '-') and column 3 empty)
             # Add columns 1, 2 and 7 in the HV-B buffer file
-            grep -E "^[^-]+;[^-]+;-;-;-;-;[^-]+;-$" "$inputFile" | cut -d ";" -f1,2,7 >> "$outputFileHvb"
+            grep -E "^$pwrPlantNbr;[^-]+;-;-;-;-;[^-]+;-$" "$inputFile" | cut -d ";" -f1,2,7 >> "$outputFileHvb"
             # Success
             echo "Extraction terminée. Les données HV-B sont dans $outputFileHvb"
         ;;
@@ -144,7 +154,7 @@
             # Read every line (except the first (categories)) of the input file
             # Check if it's a LV consummer (column 4 and 7 not empty (different of '-'))
             # Add columns 1, 4 and 7 in the lv buffer file
-            grep -E "^[^-]+;-;[^-]+;[^-]+;-;-;[^-]+;-$" "$inputFile" | cut -d ";" -f1,3,4,7 >> "$outputFileAll"
+            grep -E "^$pwrPlantNbr;-;[^-]+;[^-]+;-;-;[^-]+;-$" "$inputFile" | cut -d ";" -f1,3,4,7 >> "$outputFileAll"
             # Success
             echo "Extraction terminée. Les données de l'ensemble des consommateurs sont dans $outputFileAll"
         ;;
@@ -159,7 +169,7 @@
             # Check if it's a consumer (column 3 and 7 not empty (different of '-') and column 4 empty)
             
             # Add columns 1, 2, 3 and 7 in the HV-A buffer file
-            grep -E "^[^-]+;[^-]+;[^-]+;-;-;-;[^-]+;-$" "$inputFile" | cut -d ";" -f1,2,3,7 >> "$outputFileComp"
+            grep -E "^$pwrPlantNbr;[^-]+;[^-]+;-;-;-;[^-]+;-$" "$inputFile" | cut -d ";" -f1,2,3,7 >> "$outputFileComp"
             # Success
             echo "Extraction terminée. Les données des consommateurs entreprises des '$typeStation' sont dans $outputFileComp"
         ;;
@@ -173,8 +183,15 @@
             # Read every line (except the first (categories)) of the input file
             # Check if it's a lv individual consumers (column 6 and 8 not empty (different of '-'))
             # Add columns 4 and 8 in the individual consumers buffer file
-            grep -E "^[^-]+;-;-;[^-]+;-;[^-]+;-;[^-]+$" "$inputFile" | cut -d ";" -f4,7 >> "$outputFile"
+            grep -E "^$pwrPlantNbr;-;-;[^-]+;-;[^-]+;-;[^-]+$" "$inputFile" | cut -d ";" -f4,7 >> "$outputFile"
             # Success
             echo "Extraction terminée. Les données des consommateurs individuels LV sont dans $outputFileIndiv"
         ;;
     esac
+
+# Delete execution file and buffer file
+    make cleanexec -C ./codeC
+    #make clean -C ./codeC
+
+# Confirm end of the treatment
+    echo "Traitement terminé. Les résultats sont dans le fichier du dossier tests."
