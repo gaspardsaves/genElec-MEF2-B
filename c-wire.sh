@@ -86,17 +86,39 @@
         elif [[ $# = 3 ]] ; then
             # Assign neutral value to the power plant number
             pwrPlantNbr='[0-9]+'
+            echo "Arguments corrects"
             echo "Nous étudions les consommateurs '$typeCons' branchés sur les '$typeStation' du fichier '$inputFile'."
         fi
 
-# Vérif tmp / graphs existance + vider si nécéssaire
-    
+    # Checking the existence and clean-up of 'graphs' and 'tmp' directories
+    # A faire gestion des permissions
+        directory1="tmp"
+        directory2="graphs"
+        checkDirectory () {
+            local directory=$1
+            if [ -d "$directory" ]; then # Clean the directory
+                rm -f "$directory"/*
+                echo "Le dossier '$directory' a été nettoyé avec succès."
+            else
+                mkdir "$directory"  # Create the directory
+                echo "Le dossier '$directory' n'existait pas et a été créé avec succès"
+            fi
+        }
+        checkDirectory "$directory1"
+        checkDirectory "$directory2"
 
-# Compilation of the code C
-    make -C ./codeC
+# Compilation of the code C and check if it's successful
+    echo "____ ALL ____" > make.log
+    echo "$(date): Compilation" >> make.log
+    make -C ./codeC >> make.log 2>&1 # Voir si on garde cette redirection ou juste l'erreur
+    if [ $? -eq 0 ]; then
+        echo "Compilation réussie. Détail dans le fichier make.log"
+    else
+        echo "Echec de compilation. Voir erreurs dans le fichier make.log."
+        exit 111
+    fi
 
-    # Vérif make
-
+# Data treatment
     case "$typeStation" in
         'lv' )
             # LV data
@@ -189,9 +211,27 @@
         ;;
     esac
 
-# Delete execution file and buffer file
-    make cleanexec -C ./codeC
-    #make clean -C ./codeC
+# Delete execution file and check if it's successful
+    echo "____ CLEAN ____" >> make.log
+    echo "$(date): Suppression des exécutables" >> make.log
+    make clean -C ./codeC >> make.log 2>&1 # Voir si on garde cette redirection globale ou juste l'erreur
+    if [ $? -eq 0 ]; then
+        echo "Suppression des exécutables réussie. Détail dans le fichier make.log"
+    else
+        echo "Echec de la suppression des exécutables. Voir les erreurs dans le fichier make.log."
+        exit 112
+    fi
+
+# Delete buffer file and check if it's successful
+    echo "____ CLEANFILE____" >> make.log
+    echo "$(date): Suppression des fichiers tampons" >> make.log
+    make cleanfile -C ./codeC >> make.log 2>&1 # Voir si on garde cette redirection globale ou juste l'erreur 
+    if [ $? -eq 0 ]; then
+        echo "Suppression des fichiers tampons réussie. Détail dans le fichier make.log"
+    else
+        echo "Echec de suppression des fichiers tampons. Voir erreurs dans le fichier make.log."
+        exit 113
+    fi
 
 # Confirm end of the treatment
     echo "Traitement terminé. Les résultats sont dans le fichier du dossier tests."

@@ -1,8 +1,6 @@
 GEN ELEC – CARNET DE BORD 
 
- 
-
-1 – 11 – 2024 :  
+18 – 11 – 2024 :  
 
 Première réunion : on se morfond dans la complexité du pdf qui nous a été fourni
 On a réussi à trouver la façon de générer l’arbre en pouvant tout de même l’équilibrer. 
@@ -27,4 +25,31 @@ Des problèmes de complexité se posent très rapidement sur le traitement des d
 2 -12 - 24 :
 Modif header structures pour traiter une entité électrique sans se soucier de ce que c'est et de même pour compter le consommation
 Modif shell pour utiliser grep et ne pas avoir de boucle ce qui améliore significativement la complexité
-Implémentation de l'aide dans les paramétres
+Implémentation de l'aide dans les paramétres du script et rédaction du fichier d'aide.
+Rédaction du code AVL équilibrage et rotation
+
+3 - 12 - 24 :
+Ajout de robustesse dans le script shell :
+- Nombre minimum d'arguments
+- Vérification du premier argument (existence et possibilité de lire le fichier de données)
+- Vérification de la validité des combinaisons d'arguments 2 et 3
+
+4 - 12 - 24 :
+Ajout de robustesse dans le script shell :
+- Nombre maximum d'arguments
+- Vérification de la validité de l'argument 2
+- Vérification de la validité de l'argument 3
+- Vérification de la validité de l'argument 4 s'il est présent
+Début de la rédaction de l'extraction des données des consommateurs
+
+5 - 12 - 24 :
+
+Implémentation du quatrième argument optionnel des centrales dans le script.
+Utilisation d'une valeur neutre '[0-9]+' pour ne pas inutilement dupliquer du code quand cet argument n'est pas appelé.
+Les données sont désormais bien sélectionnées il ne manque plus que de les envoyer ensemble dans l'exécutable ou dans un fichier tampon.
+Implémentation de la libération de la mémoire dans le code c, adaptation du code C aux modifications du shell.
+Ajout d'une cible debug dans le makefile pour utiliser fsanitize.
+
+8 - 12 - 24 :
+Debug de la cible debug dans le makefile pour vérifier la bonne libération de la mémoire
+Ajout de la vérification du retour du makefile dans le script shell et création d'un fichier make.log
