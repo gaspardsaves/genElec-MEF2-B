@@ -145,7 +145,7 @@ ElecEntity* insert(ElecEntity* pHead, int id, int capacity, int consumption, int
     if(*h != 0){
         //update the balance after adding the new node
         pHead->balanceFactor += *h;
-        //here is the rebalancing fonction for Phead : rebalancin(phead);
+        //here is the rebalancing fonction for Phead  rebalancing(phead)
         pHead = BringBalance(pHead);
         if(pHead->balanceFactor == 0){
             *h = 0;
