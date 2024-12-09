@@ -80,13 +80,14 @@ void check(ElecEntity* Tree){
     }
 }
 
-ElecEntity* create(int id, int capacity, int consumption){
+ElecEntity* create(int id, int capacity, int consumption, int powerPlant){
     ElecEntity* new = malloc(sizeof(ElecEntity));
     check(new);
 
     new->id = id;
     new->capacity = capacity;
     new->consumption = consumption;
+    new->powerPlant = powerPlant;
     new->balanceFactor = 0;
     new->pLeft = NULL;
     new->pRight = NULL;
@@ -94,17 +95,17 @@ ElecEntity* create(int id, int capacity, int consumption){
     return new;
 }
 
-ElecEntity* insert(ElecEntity* pHead, int id, int capacity, int consumption, int* h){
+ElecEntity* insert(ElecEntity* pHead, int id, int capacity, int consumption, int powerPlant, int* h){
     if(pHead == NULL){
         *h = 1;
-        return create(id, capacity, consumption);
+        return create(id, capacity, consumption, powerPlant);
     }
     else if(id < pHead->id){
-        pHead->pLeft = insert(pHead->pLeft, id, capacity, consumption, h);
+        pHead->pLeft = insert(pHead->pLeft, id, capacity, consumption, powerPlant, h);
         *h = (-1)*(*h);
     }
     else if(id > pHead->id){
-        pHead->pRight = insert(pHead->pRight, id, capacity, consumption, h);
+        pHead->pRight = insert(pHead->pRight, id, capacity, consumption, powerPlant, h);
     }
     else{
         *h = 0;
@@ -142,7 +143,7 @@ void FreeTree(ElecEntity* Tree){
         free(Tree);
     }
 }
-/*
+
 int main(){
     ElecEntity* Tree = create(1, 160000, 0, 1);
     int* h = malloc(sizeof(int));
@@ -161,14 +162,4 @@ int main(){
     }
     FreeTree(Tree);
     return 0;
-}*/
-
-int main(){
-    ElecEntity* tree = NULL;
-
-    int id,  capacity,  consumption, height;
-
-    while (scanf("%d %d  %d", &id, &capacity, &consumption, ) == 3 ) {
-        tree = insert(tree, id, capacity, consumption, &height);
-    }
 }
