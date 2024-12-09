@@ -104,9 +104,8 @@ void check(ElecEntity* Tree){
     }
 }
 
-ElecEntity* create(int id, int capacity, int consumption, int powerPlant){
-    //Memory allocation for a new ElecEntity
 ElecEntity* create(int id, int capacity, int consumption){
+    //Memory allocation for a new ElecEntity
     ElecEntity* new = malloc(sizeof(ElecEntity));
     //Verification if malloc is doing good work
     check(new);
@@ -114,7 +113,6 @@ ElecEntity* create(int id, int capacity, int consumption){
     new->id = id;
     new->capacity = capacity;
     new->consumption = consumption;
-    new->powerPlant = powerPlant;
     //Initialisation of the balance factor
     new->balanceFactor = 0;
     //Initialisation of left and right sons
@@ -123,9 +121,8 @@ ElecEntity* create(int id, int capacity, int consumption){
     return new;
 }
 
-ElecEntity* insert(ElecEntity* pHead, int id, int capacity, int consumption, int powerPlant, int* h){
-    //Creation of a new node if phead is empty
 ElecEntity* insert(ElecEntity* pHead, int id, int capacity, int consumption, int* h){
+    //Creation of a new node if phead is empty
     if(pHead == NULL){
         *h = 1;
         return create(id, capacity, consumption);
