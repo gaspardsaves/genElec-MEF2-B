@@ -74,7 +74,7 @@ ElecEntity* BringBalance(ElecEntity* Tree){
     return Tree;
 }
 
-int check(ElecEntity* Tree){
+void check(ElecEntity* Tree){
     if (Tree == NULL){
         exit(1);
     }
@@ -154,9 +154,12 @@ int main(){
     Tree = insert(Tree, 3, 0, 2000, 1, h);
     Tree = insert(Tree, 1, 0, 2000, 1, h);
     Tree = insert(Tree, 1, 0, 2000, 1, h);
-    PrintPrefix(Tree);
+    int i = 0;
+    while(i<1000000){
+        Tree = insert(Tree, 1, 0, 2000, 1, h);
+        i++;
+    }
     FreeTree(Tree);
-    PrintPrefix(Tree);
     return 0;
 }*/
 
