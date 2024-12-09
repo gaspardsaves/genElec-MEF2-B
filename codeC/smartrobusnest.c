@@ -71,7 +71,7 @@ float better_scanFloat(char * message){
 unsigned better_scanUn(char * message){
     int ret_var = 0;
     unsigned value = 1;
-  while (ret_var != 1 || value < 0)
+  while (ret_var != 1)
     {   
         printf("%s", message);
         ret_var = scanf("%d", &value);
