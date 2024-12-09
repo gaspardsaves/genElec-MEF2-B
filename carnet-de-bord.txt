@@ -53,3 +53,7 @@ Ajout d'une cible debug dans le makefile pour utiliser fsanitize.
 8 - 12 - 24 :
 Debug de la cible debug dans le makefile pour vérifier la bonne libération de la mémoire
 Ajout de la vérification du retour du makefile dans le script shell et création d'un fichier make.log
+
+9 - 12 - 24 :
+Test avec un grand nombre de données : libération effective de la mémoire
+Modification du code c pour enlever le tri par centrale qui est traité par le script

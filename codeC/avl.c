@@ -106,6 +106,7 @@ void check(ElecEntity* Tree){
 
 ElecEntity* create(int id, int capacity, int consumption, int powerPlant){
     //Memory allocation for a new ElecEntity
+ElecEntity* create(int id, int capacity, int consumption){
     ElecEntity* new = malloc(sizeof(ElecEntity));
     //Verification if malloc is doing good work
     check(new);
@@ -124,18 +125,19 @@ ElecEntity* create(int id, int capacity, int consumption, int powerPlant){
 
 ElecEntity* insert(ElecEntity* pHead, int id, int capacity, int consumption, int powerPlant, int* h){
     //Creation of a new node if phead is empty
+ElecEntity* insert(ElecEntity* pHead, int id, int capacity, int consumption, int* h){
     if(pHead == NULL){
         *h = 1;
-        return create(id, capacity, consumption, powerPlant);
+        return create(id, capacity, consumption);
     }
     //Insert a new node in the left side if the id of the new node is lower than id of a current branch
     else if(id < pHead->id){
-        pHead->pLeft = insert(pHead->pLeft, id, capacity, consumption, powerPlant, h);
+        pHead->pLeft = insert(pHead->pLeft, id, capacity, consumption, h);
         *h = (-1)*(*h);
     }
     //Insert a new node in the left side if the id of the new node is bigger than id of a current branch
     else if(id > pHead->id){
-        pHead->pRight = insert(pHead->pRight, id, capacity, consumption, powerPlant, h);
+        pHead->pRight = insert(pHead->pRight, id, capacity, consumption, h);
     }
     //if the node is already exist, update the node
     else{
@@ -175,7 +177,7 @@ void FreeTree(ElecEntity* Tree){
         free(Tree);
     }
 }
-
+/*
 int main(){
     ElecEntity* Tree = create(1, 160000, 0, 1);
     int* h = malloc(sizeof(int));
@@ -194,4 +196,14 @@ int main(){
     }
     FreeTree(Tree);
     return 0;
+}*/
+
+int main(){
+    ElecEntity* tree = NULL;
+
+    int id,  capacity,  consumption, height;
+
+    while (scanf("%d %d  %d", &id, &capacity, &consumption, ) == 3 ) {
+        tree = insert(tree, id, capacity, consumption, &height);
+    }
 }
