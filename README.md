@@ -22,6 +22,8 @@ Exécution :
     Pour avoir le détail des paramétres possibles du script : possibilité d'utiliser l'option -h ou --help './c-wire.sh -h' ou './c-wire.sh --help'
     Pour exécuter le fichier code C séparément : ./codeC/execdef
     Le fichier de données à traiter doit se situer dans le sous-répertoire 'inputs' (--> à voir pour passer les données en param)
+    ./inputs/c-wire_v25.dat
+    ./inputs/c-wire_v00.dat
     
 2 - En mode débug :
 

@@ -10,11 +10,11 @@
 ElecEntity* RotateRight(ElecEntity* Tree){
     // Verification of the Tree
     if(Tree==NULL){
-        exit(1);
+        exit(10);
     }
     // Verification of the left son
     if(Tree->pLeft==NULL){
-        exit(2);
+        exit(11);
     }
     // Save the left son Tree adress
     ElecEntity* Pivot = Tree->pLeft;
@@ -35,16 +35,14 @@ ElecEntity* RotateRight(ElecEntity* Tree){
     return Tree;
 }
 
-
-
 ElecEntity* RotateLeft(ElecEntity* Tree){
     // Verification of the Tree
     if(Tree==NULL){
-        exit(1);
+        exit(12);
     }
     // Verification of the right son
     if(Tree->pRight==NULL){
-        exit(2);
+        exit(13);
     }
     // Save the right son Tree adress
     ElecEntity* Pivot = Tree->pRight;
@@ -97,25 +95,16 @@ ElecEntity* BringBalance(ElecEntity* Tree){
     return Tree;
 }
 
-void check(ElecEntity* Tree){
-    //Verification if Tree is NULL
-    if (Tree == NULL){
-        exit(1);
-    }
-}
-
 ElecEntity* create(int id, int capacity, int consumption){
     //Memory allocation for a new ElecEntity
-ElecEntity* create(int id, int capacity, int consumption, int powerPlant){
     ElecEntity* new = malloc(sizeof(ElecEntity));
     //Verification if malloc is doing good work
-    check(new);
+    verifPointer(new);
     //Value assignement
     new->id = id;
     new->capacity = capacity;
     new->consumption = consumption;
     //Initialisation of the balance factor
-    new->powerPlant = powerPlant;
     new->balanceFactor = 0;
     //Initialisation of left and right sons
     new->pLeft = NULL;
@@ -125,30 +114,29 @@ ElecEntity* create(int id, int capacity, int consumption, int powerPlant){
 
 ElecEntity* insert(ElecEntity* pHead, int id, int capacity, int consumption, int* h){
     //Creation of a new node if phead is empty
-ElecEntity* insert(ElecEntity* pHead, int id, int capacity, int consumption, int powerPlant, int* h){
     if(pHead == NULL){
         *h = 1;
-        return create(id, capacity, consumption, powerPlant);
+        return create(id, capacity, consumption);
     }
     //Insert a new node in the left side if the id of the new node is lower than id of a current branch
     else if(id < pHead->id){
-        pHead->pLeft = insert(pHead->pLeft, id, capacity, consumption, powerPlant, h);
+        pHead->pLeft = insert(pHead->pLeft, id, capacity, consumption, h);
         *h = (-1)*(*h);
     }
-    //Insert a new node in the left side if the id of the new node is bigger than id of a current branch
+    //Insert a new node in the right side if the id of the new node is bigger than id of a current branch
     else if(id > pHead->id){
-        pHead->pRight = insert(pHead->pRight, id, capacity, consumption, powerPlant, h);
+        pHead->pRight = insert(pHead->pRight, id, capacity, consumption, h);
     }
-    //if the node is already exist, update the node
+    //If the node already exist, update the node
     else{
         *h = 0;
         pHead->consumption += consumption;
         return pHead;
     }
     if(*h != 0){
-        //update the balance after adding the new node
+        //Update the balance after adding the new node
         pHead->balanceFactor += *h;
-        //here is the rebalancing fonction for Phead  rebalancing(phead)
+        //Here is the rebalancing fonction for Phead
         pHead = BringBalance(pHead);
         if(pHead->balanceFactor == 0){
             *h = 0;
@@ -160,7 +148,7 @@ ElecEntity* insert(ElecEntity* pHead, int id, int capacity, int consumption, int
     return pHead;
 }
 
-
+// Print the three with a prefix process
 void PrintPrefix(ElecEntity* Tree){
     if(Tree==NULL){
         return ;
@@ -170,6 +158,7 @@ void PrintPrefix(ElecEntity* Tree){
     PrintPrefix(Tree->pRight);
 }
 
+// Freeing allocated memory for tree
 void FreeTree(ElecEntity* Tree){
     if(Tree!=NULL){
         FreeTree(Tree->pLeft);
@@ -179,19 +168,19 @@ void FreeTree(ElecEntity* Tree){
 }
 
 int main(){
-    ElecEntity* Tree = create(1, 160000, 0, 1);
+    ElecEntity* Tree = create(1, 160000, 1);
     int* h = malloc(sizeof(int));
-    Tree = insert(Tree, 1, 0, 2000, 1, h);
-    Tree = insert(Tree, 2, 0, 2000, 1, h);
-    Tree = insert(Tree, 1, 0, 2000, 1, h);
-    Tree = insert(Tree, 1, 0, 2000, 1, h);
-    Tree = insert(Tree, 1, 0, 2000, 1, h);
-    Tree = insert(Tree, 3, 0, 2000, 1, h);
-    Tree = insert(Tree, 1, 0, 2000, 1, h);
-    Tree = insert(Tree, 1, 0, 2000, 1, h);
+    Tree = insert(Tree, 1, 0, 2000, h);
+    Tree = insert(Tree, 2, 0, 2000, h);
+    Tree = insert(Tree, 1, 0, 2000, h);
+    Tree = insert(Tree, 1, 0, 2000, h);
+    Tree = insert(Tree, 1, 0, 2000, h);
+    Tree = insert(Tree, 3, 0, 2000, h);
+    Tree = insert(Tree, 1, 0, 2000, h);
+    Tree = insert(Tree, 1, 0, 2000, h);
     int i = 0;
     while(i<1000000){
-        Tree = insert(Tree, 1, 0, 2000, 1, h);
+        Tree = insert(Tree, 1, 0, 2000, h);
         i++;
     }
     FreeTree(Tree);

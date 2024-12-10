@@ -56,4 +56,8 @@ Ajout de la vérification du retour du makefile dans le script shell et créatio
 
 9 - 12 - 24 :
 Test avec un grand nombre de données : libération effective de la mémoire
-Modification du code c pour enlever le tri par centrale qui est traité par le script
+Modification du code c pour enlever le tri par centrale qui est désormais traité par le script
+Travail sur les expressions régulières dans les commandes grep du script shell pour pouvoir traiter l'ensemble des données en parcourant une seule fois le fichier.
+
+10 - 12 -24 :
+Commentaires et modulation du code C et du script

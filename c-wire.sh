@@ -3,94 +3,95 @@
 # Parameters analysis
 
     # Check if the user need help
-    for arg in "$@"; do
-        if [[ "$arg" == "-h" || "$arg" == "--help" ]] ; then
-            echo "Option d'aide détectée"
-            cat "help.txt"
-            exit 101
-        fi
-    done
+        for arg in "$@"; do
+            if [[ "$arg" == "-h" || "$arg" == "--help" ]] ; then
+                echo "Option d'aide détectée"
+                cat "help.txt"
+                exit 101
+            fi
+        done
 
     # Checking the minimum number of arguments
-    if [[ $# -lt 3 ]] ; then
-        echo "Nombre d'arguments insuffisant"
-        echo "Utilisez -h ou --help pour afficher l'aide."
-        exit 102
-    fi
+        if [[ $# -lt 3 ]] ; then
+            echo "Nombre d'arguments insuffisant"
+            echo "Utilisez -h ou --help pour afficher l'aide."
+            exit 102
+        fi
 
     # Checking the maximum number of arguments
-    if [[ $# -gt 4 ]] ; then
-        echo "Nombre d'arguments trop important"
-        echo "Utilisez -h ou --help pour afficher l'aide."
-        exit 103
-    fi
+        if [[ $# -gt 4 ]] ; then
+            echo "Nombre d'arguments trop important"
+            echo "Utilisez -h ou --help pour afficher l'aide."
+            exit 103
+        fi
 
     # Assignement and checking consistency of arguments
-        # Adress of the input file
-        #inputFile="./inputs/c-wire_v00.dat"
-        #inputFile="./inputs/c-wire_v25.dat"
-        inputFile="$1"
+        # First argument of the script
+            # Adress of the input file
+            inputFile="$1"
 
-        # Checking the existence and the possibility of reading the file
-        if [[ ! ( -f "$inputFile" ) ]] ; then
-            echo "Le fichier de données n'existe pas à cet emplacement"
-            exit 104
-        elif [[  ! ( -r "$inputFile" ) ]] ; then
-            echo "Droit de lecture manquant sur ce fichier."
-            echo "Veuillez corriger les permissions et réitérer la demande."
-            exit 105
-        fi
+            # Checking the existence and the possibility of reading the file
+                if [[ ! ( -f "$inputFile" ) ]] ; then
+                    echo "Le fichier de données n'existe pas à cet emplacement"
+                    exit 104
+                elif [[  ! ( -r "$inputFile" ) ]] ; then
+                    echo "Droit de lecture manquant sur ce fichier."
+                    echo "Veuillez corriger les permissions et réitérer la demande."
+                    exit 105
+                fi
+        # Second argument
+            # Type of electric post to be treated (hvb, hva, lv)
+            typeStation="$2"
 
-        # Type of electric post to be treated (hvb, hva, lv)
-        typeStation="$2"
+            # Checking validity of the second argument
+                if [[ "$typeStation" != "hvb" && "$typeStation" != "hva" && "$typeStation" != "lv" ]] ; then
+                    echo "Type de poste électrique invalide"
+                    echo "Utilisez -h ou --help pour afficher l'aide."
+                    exit 106
+                fi
 
-        # Checking validity of the second argument
-        if [[ "$typeStation" != "hvb" && "$typeStation" != "hva" && "$typeStation" != "lv" ]] ; then
-            echo "Type de poste électrique invalide"
-            echo "Utilisez -h ou --help pour afficher l'aide."
-            exit 106
-        fi
+        # Third argument
+            # Type of consumer to be treated (comp, indiv, all)
+            typeCons="$3"
 
-        # Type of consumer to be treated (comp, indiv, all)
-        typeCons="$3"
-
-        # Checking validity of the third argument
-        if [[ "$typeCons" != "comp" && "$typeCons" != "indiv" && "$typeCons" != "all" ]] ; then
-            echo "Type de consommateur invalide"
-            echo "Utilisez -h ou --help pour afficher l'aide."
-            exit 107
-        fi
+            # Checking validity of the third argument
+                if [[ "$typeCons" != "comp" && "$typeCons" != "indiv" && "$typeCons" != "all" ]] ; then
+                    echo "Type de consommateur invalide"
+                    echo "Utilisez -h ou --help pour afficher l'aide."
+                    exit 107
+                fi
 
         # Checking argument combinations
-        if [[ "$typeStation" == "hvb" && "$typeCons" != "comp" ]] ; then
-            echo "La station HV-B n'a pour consommateur que des entreprises (argument 'comp')"
-            echo "Utilisez -h ou --help pour afficher l'aide."
-            exit 108
-        elif [[ "$typeStation" == "hva" && "$typeCons" != "comp" ]] ; then
-            echo "La station HV-A n'a pour consommateur que des entreprises (argument 'comp')"
-            echo "Utilisez -h ou --help pour afficher l'aide."
-            exit 109
-        fi
-
-        # Assigning and checking validity of the fourth argument if it's present
-        if [[ $# = 4 ]] ; then
-            pwrPlantNbr="$4"
-            if [[ "$pwrPlantNbr" != "1" && "$pwrPlantNbr" != "2" && "$pwrPlantNbr" != "3" && "$pwrPlantNbr" != "4" && "$pwrPlantNbr" != "5" ]] ; then
-                echo "Le numéro de centrale est incorrect."
+            if [[ "$typeStation" == "hvb" && "$typeCons" != "comp" ]] ; then
+                echo "La station HV-B n'a pour consommateur que des entreprises (argument 'comp')"
                 echo "Utilisez -h ou --help pour afficher l'aide."
-                exit 110
+                exit 108
+            elif [[ "$typeStation" == "hva" && "$typeCons" != "comp" ]] ; then
+                echo "La station HV-A n'a pour consommateur que des entreprises (argument 'comp')"
+                echo "Utilisez -h ou --help pour afficher l'aide."
+                exit 109
             fi
-        #Confirmation of user input and what is going to be done
-            echo "Arguments corrects"
-            echo "Nous étudions les consommateurs '$typeCons' branchés sur les '$typeStation' de la centrale numéro $pwrPlantNbr du fichier '$inputFile'."
-        elif [[ $# = 3 ]] ; then
-            # Assign neutral value to the power plant number
-            pwrPlantNbr='[0-9]+'
-            echo "Arguments corrects"
-            echo "Nous étudions les consommateurs '$typeCons' branchés sur les '$typeStation' du fichier '$inputFile'."
-        fi
 
-    # Checking the existence and clean-up of 'graphs' and 'tmp' directories
+        # Fourth argument
+            # Assigning and checking validity of the fourth argument if it's present
+                if [[ $# = 4 ]] ; then
+                    pwrPlantNbr="$4"
+                    if [[ "$pwrPlantNbr" != "1" && "$pwrPlantNbr" != "2" && "$pwrPlantNbr" != "3" && "$pwrPlantNbr" != "4" && "$pwrPlantNbr" != "5" ]] ; then
+                        echo "Le numéro de centrale est incorrect."
+                        echo "Utilisez -h ou --help pour afficher l'aide."
+                        exit 110
+                    fi
+                #Confirmation of user input and what is going to be done
+                    echo "Arguments corrects"
+                    echo "Nous étudions les consommateurs '$typeCons' branchés sur les '$typeStation' de la centrale numéro $pwrPlantNbr du fichier '$inputFile'."
+                elif [[ $# = 3 ]] ; then
+                    # Assign neutral value to the power plant number
+                    pwrPlantNbr='[0-9]+'
+                    echo "Arguments corrects"
+                    echo "Nous étudions les consommateurs '$typeCons' branchés sur les '$typeStation' du fichier '$inputFile'."
+                fi
+
+    # Checking the existence and clean-up of 'graphs' and 'tmp' directories using a function
     # A faire gestion des permissions
         directory1="tmp"
         directory2="graphs"
@@ -118,7 +119,8 @@
         exit 111
     fi
 
-# Data treatment
+# Data treatment 
+    # Use of switch case loop
     case "$typeStation" in
         'lv' )
             # LV data
@@ -128,7 +130,7 @@
                 > "$outputFileLv"
             # Read every line (except the first (categories)) of the input file
             # Check if it's a LV (column 4 and 7 not empty (different of '-'))
-            # Add columns 1, 4 and 7 in the lv buffer file
+            # Add columns 4, 7 and 8 in the lv buffer file
             case "$typeCons" in
                 'all' )
                     # All consumers data
