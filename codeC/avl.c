@@ -1,7 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "structures.h" 
+#include "structures.h"
+#include "smartrobusnest.h"
 #include "avl.h"
 
 #define max(a,b) ((a)>(b) ? a : b)
@@ -150,13 +151,23 @@ ElecEntity* insert(ElecEntity* pHead, int id, int capacity, int consumption, int
 
 // Print the three with a prefix process
 void PrintPrefix(ElecEntity* Tree){
+    if(Tree!=NULL){
+        PrintPrefix(Tree->pLeft);
+        printf("%d;%d;%d\n", Tree->id, Tree->capacity, Tree->consumption);
+        PrintPrefix(Tree->pRight);
+    }
+}
+
+/*
+void PrintPrefix2(ElecEntity* Tree){
     if(Tree==NULL){
         return ;
     }
-    printf("[ElecEntity : id = %d, capacity = %d, consumption = %d, balance = %d]\n", Tree->id, Tree->capacity, Tree->consumption, Tree->balanceFactor);
-    PrintPrefix(Tree->pLeft);
-    PrintPrefix(Tree->pRight);
+    PrintPrefix2(Tree->pLeft);
+    printf("%d;%d;%d;%d\n", Tree->id, Tree->capacity, Tree->consumption, Tree->balanceFactor);
+    PrintPrefix2(Tree->pRight);
 }
+*/
 
 // Freeing allocated memory for tree
 void FreeTree(ElecEntity* Tree){
@@ -166,7 +177,22 @@ void FreeTree(ElecEntity* Tree){
         free(Tree);
     }
 }
+//*
+int main(){
+    ElecEntity* pTree = NULL;
+    int id, capacity, consumption;
+    int* h = malloc(sizeof(int));
+    while (scanf("%d;%d;%d", &id, &capacity, &consumption) == 3) {
+        pTree = insert(pTree, id, capacity, consumption, h);
+    }
+    PrintPrefix(pTree);
+    FreeTree(pTree);
+    free(h);
+    return 0;
+}
+//*/
 
+/*
 int main(){
     ElecEntity* Tree = create(1, 160000, 1);
     int* h = malloc(sizeof(int));
@@ -180,9 +206,12 @@ int main(){
     Tree = insert(Tree, 1, 0, 2000, h);
     int i = 0;
     while(i<1000000){
-        Tree = insert(Tree, 1, 0, 2000, h);
+        Tree = insert(Tree, i, 0, 2000, h);
         i++;
     }
+    PrintPrefix2(Tree);
     FreeTree(Tree);
+    free(h);
     return 0;
 }
+//*/

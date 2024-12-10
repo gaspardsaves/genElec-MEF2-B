@@ -134,15 +134,15 @@
             case "$typeCons" in
                 'all' )
                     # All consumers data
-                    grep -E "^$pwrPlantNbr;-;-|[0-9]+;[^-]+;-|[0-9]+;-|[0-9]+;-|[0-9]+;-|[0-9]+$" "$inputFile" | cut -d ";" -f4,7,8 >> "$outputFileLv"
+                    grep -E "^$pwrPlantNbr;-;-|[0-9]+;[^-]+;-|[0-9]+;-|[0-9]+;-|[0-9]+;-|[0-9]+$" "$inputFile" | cut -d ";" -f4,7,8 | ./codeC/execdef >> "$outputFileLv"
                 ;;
                 'comp' )
                     # Company consumer data
-                    grep -E "^$pwrPlantNbr;-;-|[0-9]+;[^-]+;-|[0-9]+;-;-|[0-9]+;-|[0-9]+$" "$inputFile" | cut -d ";" -f4,7,8 >> "$outputFileLv"
+                    grep -E "^$pwrPlantNbr;-;-|[0-9]+;[^-]+;-|[0-9]+;-;-|[0-9]+;-|[0-9]+$" "$inputFile" | cut -d ";" -f4,7,8 | ./codeC/execdef >> "$outputFileLv"
                 ;;
                 'indiv' )
                     # Individuals consumers data
-                    grep -E "^$pwrPlantNbr;-;-|[0-9]+;[^-]+;-;-|[0-9]+;-|[0-9]+;-|[0-9]+$" "$inputFile" | cut -d ";" -f4,7,8 >> "$outputFileLv"
+                    grep -E "^$pwrPlantNbr;-;-|[0-9]+;[^-]+;-;-|[0-9]+;-|[0-9]+;-|[0-9]+$" "$inputFile" | cut -d ";" -f4,7,8 | ./codeC/execdef >> "$outputFileLv"
                 ;;
             esac
             # Success
@@ -158,7 +158,13 @@
             # Read every line (except the first (categories)) of the input file
             # Check if it's a HV-A (column 3 and 7 not empty (different of '-') and column 4 empty)
             # Add columns 1, 2, 3 and 7 in the HV-A buffer file
-            grep -E "^$pwrPlantNbr;-|[0-9]+;[^-]+;-;-|[0-9]+;-;-|[0-9]+;-|[0-9]+$" "$inputFile" | cut -d ";" -f3,7,8 >> "$outputFileHva"
+            # ( ./codeC/execdef < ( grep -E "^$pwrPlantNbr;-|[0-9]+;[^-]+;-;-|[0-9]+;-;-|[0-9]+;-|[0-9]+$" "$inputFile" | cut -d ";" -f3,7,8 | tr '-' '0' ) ) > "$outputFileHva"
+            
+            ( grep -E "^$pwrPlantNbr;-|[0-9]+;[^-]+;-;-|[0-9]+;-;-|[0-9]+;-|[0-9]+$" "$inputFile" | cut -d ";" -f3,7,8 | tr '-' '0' | ./codeC/execdef ) > "$outputFileHva"
+            # Test ok avec cette commande manque le tri par consommation croissante et nécessité de passer en long int car sinon chiffres négatifs
+
+            #outputFileDef="./tmp/buff-hva-def.dat"
+            #(./codeC/execdef < $outputFileHva ) > $outputFileDef
             # Success
             echo "Extraction terminée. Les données HV-A des postes et des consommateurs sont dans $outputFileHva"
         ;;
@@ -172,7 +178,7 @@
             # Read every line (except the first (categories)) of the input file
             # Check if it's a HV-B (column 2 and 7 not empty (different of '-') and column 3 empty)
             # Add columns 1, 2 and 7 in the HV-B buffer file
-            grep -E "^$pwrPlantNbr;[^-]+;-;-;-|[0-9]+;-;-|[0-9]+;-|[0-9]+$" | cut -d ";" -f2,7,8 >> "$outputFileHvb"
+            grep -E "^$pwrPlantNbr;[^-]+;-;-;-|[0-9]+;-;-|[0-9]+;-|[0-9]+$" | cut -d ";" -f2,7,8 | ./codeC/execdef >> "$outputFileHvb"
             # Success
             echo "Extraction terminée. Les données HV-B des postes et des consommateurs sont dans $outputFileHvb"
         ;;
@@ -192,13 +198,13 @@
 # Delete buffer file and check if it's successful
     echo "____ CLEANFILE____" >> make.log
     echo "$(date): Suppression des fichiers tampons" >> make.log
-    make cleanfile -C ./codeC >> make.log 2>&1 # Voir si on garde cette redirection globale ou juste l'erreur 
-    if [ $? -eq 0 ]; then
-        echo "Suppression des fichiers tampons réussie. Détail dans le fichier make.log"
-    else
-        echo "Echec de suppression des fichiers tampons. Voir erreurs dans le fichier make.log."
-        exit 113
-    fi
+    # make cleanfile -C ./codeC >> make.log 2>&1 # Voir si on garde cette redirection globale ou juste l'erreur 
+    #if [ $? -eq 0 ]; then
+        #echo "Suppression des fichiers tampons réussie. Détail dans le fichier make.log"
+    #else
+        #echo "Echec de suppression des fichiers tampons. Voir erreurs dans le fichier make.log."
+        #exit 113
+    #fi
 
 # Confirm end of the treatment
     echo "Traitement terminé. Les résultats sont dans le fichier du dossier tests."

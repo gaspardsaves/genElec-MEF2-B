@@ -6,7 +6,7 @@
 #include "smartrobusnest.h"
 
 //  Verify if the pointeur is not NULL
-void verifpointer(void* p){
+void verifPointer(void* p){
     if (p==NULL){
         printf("%d\n", errno);
         fprintf(stderr, "Pointeur nul\n");

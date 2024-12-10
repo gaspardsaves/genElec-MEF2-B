@@ -2,7 +2,7 @@
     #define VERIF
     #include <stddef.h>
     
-    void verifpointer(void* p);
+    void verifPointer(void* p);
     void checkOpenFile(FILE* f);
     void checkWritingFile(int writeReturn);
     void checkCloseFile(int closeReturn);
