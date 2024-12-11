@@ -61,4 +61,7 @@ Travail sur les expressions régulières dans les commandes grep du script shell
 
 10 - 12 -24 :
 Commentaires et modulation du code C et du script
-Réalisation des premiers tests avec des pipes vers le fichier C pour les HVA, temps de traitement 10 secondes pour le fichier v25
+Réalisation des premiers tests avec des pipes vers le fichier C pour les HVA, temps de traitement 10 secondes pour le fichier v25, 27s avec le tri
+
+11 - 12 - 24 :
+Implémentation du temps dans le script shell et réglage de petits détails par rapport aux attendus.

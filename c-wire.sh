@@ -1,5 +1,25 @@
 #!/bin/bash
 
+# Checking the existence and clean-up of 'graphs' and 'tmp' directories using a function
+# A faire gestion des permissions
+    directory1="tmp"
+    directory2="graphs"
+    checkDirectory () {
+        local directory=$1
+        if [ -d "$directory" ]; then # Clean the directory
+            rm -f "$directory"/*
+            echo "Le dossier '$directory' a été nettoyé avec succès."
+        else
+            mkdir "$directory"  # Create the directory
+            echo "Le dossier '$directory' n'existait pas et a été créé avec succès"
+        fi
+    }
+    checkDirectory "$directory1"
+    checkDirectory "$directory2"
+
+# Initializing processing time measure
+    timeStart=$(date +%s.%N)
+
 # Parameters analysis
 
     # Check if the user need help
@@ -13,15 +33,15 @@
 
     # Checking the minimum number of arguments
         if [[ $# -lt 3 ]] ; then
-            echo "Nombre d'arguments insuffisant"
-            echo "Utilisez -h ou --help pour afficher l'aide."
+            echo "Nombre d'arguments insuffisant. Consultez l'aide ci-dessous."
+            cat "help.txt"
             exit 102
         fi
 
     # Checking the maximum number of arguments
         if [[ $# -gt 4 ]] ; then
-            echo "Nombre d'arguments trop important"
-            echo "Utilisez -h ou --help pour afficher l'aide."
+            echo "Nombre d'arguments trop important. Consultez l'aide ci-dessous."
+            cat "help.txt"
             exit 103
         fi
 
@@ -32,11 +52,13 @@
 
             # Checking the existence and the possibility of reading the file
                 if [[ ! ( -f "$inputFile" ) ]] ; then
-                    echo "Le fichier de données n'existe pas à cet emplacement"
+                    echo "Le fichier de données n'existe pas à cet emplacement. Consultez l'aide ci-dessous."
+                    cat "help.txt"
                     exit 104
                 elif [[  ! ( -r "$inputFile" ) ]] ; then
                     echo "Droit de lecture manquant sur ce fichier."
-                    echo "Veuillez corriger les permissions et réitérer la demande."
+                    echo "Veuillez corriger les permissions et réitérer la demande. Consultez l'aide ci-dessous."
+                    cat "help.txt"
                     exit 105
                 fi
         # Second argument
@@ -45,8 +67,8 @@
 
             # Checking validity of the second argument
                 if [[ "$typeStation" != "hvb" && "$typeStation" != "hva" && "$typeStation" != "lv" ]] ; then
-                    echo "Type de poste électrique invalide"
-                    echo "Utilisez -h ou --help pour afficher l'aide."
+                    echo "Type de poste électrique invalide. Consultez l'aide ci-dessous."
+                    cat "help.txt"
                     exit 106
                 fi
 
@@ -56,19 +78,19 @@
 
             # Checking validity of the third argument
                 if [[ "$typeCons" != "comp" && "$typeCons" != "indiv" && "$typeCons" != "all" ]] ; then
-                    echo "Type de consommateur invalide"
-                    echo "Utilisez -h ou --help pour afficher l'aide."
+                    echo "Type de consommateur invalide. Consultez l'aide ci-dessous."
+                    cat "help.txt"
                     exit 107
                 fi
 
         # Checking argument combinations
             if [[ "$typeStation" == "hvb" && "$typeCons" != "comp" ]] ; then
-                echo "La station HV-B n'a pour consommateur que des entreprises (argument 'comp')"
-                echo "Utilisez -h ou --help pour afficher l'aide."
+                echo "La station HV-B n'a pour consommateur que des entreprises (argument 'comp'). Consultez l'aide ci-dessous."
+                cat "help.txt"
                 exit 108
             elif [[ "$typeStation" == "hva" && "$typeCons" != "comp" ]] ; then
-                echo "La station HV-A n'a pour consommateur que des entreprises (argument 'comp')"
-                echo "Utilisez -h ou --help pour afficher l'aide."
+                echo "La station HV-A n'a pour consommateur que des entreprises (argument 'comp'). Consultez l'aide ci-dessous."
+                cat "help.txt"
                 exit 109
             fi
 
@@ -77,8 +99,8 @@
                 if [[ $# = 4 ]] ; then
                     pwrPlantNbr="$4"
                     if [[ "$pwrPlantNbr" != "1" && "$pwrPlantNbr" != "2" && "$pwrPlantNbr" != "3" && "$pwrPlantNbr" != "4" && "$pwrPlantNbr" != "5" ]] ; then
-                        echo "Le numéro de centrale est incorrect."
-                        echo "Utilisez -h ou --help pour afficher l'aide."
+                        echo "Le numéro de centrale est incorrect. Consultez l'aide ci-dessous."
+                        cat "help.txt"
                         exit 110
                     fi
                 #Confirmation of user input and what is going to be done
@@ -91,23 +113,8 @@
                     echo "Nous étudions les consommateurs '$typeCons' branchés sur les '$typeStation' du fichier '$inputFile'."
                 fi
 
-    # Checking the existence and clean-up of 'graphs' and 'tmp' directories using a function
-    # A faire gestion des permissions
-        directory1="tmp"
-        directory2="graphs"
-        checkDirectory () {
-            local directory=$1
-            if [ -d "$directory" ]; then # Clean the directory
-                rm -f "$directory"/*
-                echo "Le dossier '$directory' a été nettoyé avec succès."
-            else
-                mkdir "$directory"  # Create the directory
-                echo "Le dossier '$directory' n'existait pas et a été créé avec succès"
-            fi
-        }
-        checkDirectory "$directory1"
-        checkDirectory "$directory2"
-
+# Initializing compilation time measure
+    compilationStart=$(date +%s.%N)
 # Compilation of the code C and check if it's successful
     echo "____ ALL ____" > make.log
     echo "$(date): Compilation" >> make.log
@@ -118,6 +125,9 @@
         echo "Echec de compilation. Voir erreurs dans le fichier make.log."
         exit 111
     fi
+# End of measure of compilation time
+    compilationEnd=$(date +%s.%N)
+    compilationTime=$( echo "$compilationEnd - $compilationStart" | bc )
 
 # Data treatment 
     # Use of switch case loop
@@ -158,13 +168,14 @@
             # Read every line (except the first (categories)) of the input file
             # Check if it's a HV-A (column 3 and 7 not empty (different of '-') and column 4 empty)
             # Add columns 1, 2, 3 and 7 in the HV-A buffer file
-            # ( ./codeC/execdef < ( grep -E "^$pwrPlantNbr;-|[0-9]+;[^-]+;-;-|[0-9]+;-;-|[0-9]+;-|[0-9]+$" "$inputFile" | cut -d ";" -f3,7,8 | tr '-' '0' ) ) > "$outputFileHva"
+            #./codeC/execdef < ( grep -E "^$pwrPlantNbr;-|[0-9]+;[^-]+;-;-|[0-9]+;-;-|[0-9]+;-|[0-9]+$" "$inputFile" | cut -d ";" -f3,7,8 | sort -t ";" -k2,2n | tr '-' '0' ) > "$outputFileHva"
             
-            ( grep -E "^$pwrPlantNbr;-|[0-9]+;[^-]+;-;-|[0-9]+;-;-|[0-9]+;-|[0-9]+$" "$inputFile" | cut -d ";" -f3,7,8 | tr '-' '0' | ./codeC/execdef ) > "$outputFileHva"
+            #( grep -E "^$pwrPlantNbr;-|[0-9]+;[^-]+;-;-|[0-9]+;-;-|[0-9]+;-|[0-9]+$" "$inputFile" | cut -d ";" -f3,7,8 | sort -t ";" -k2,2n | tr '-' '0' | ./codeC/execdef ) > "$outputFileHva"
             # Test ok avec cette commande manque le tri par consommation croissante et nécessité de passer en long int car sinon chiffres négatifs
 
-            #outputFileDef="./tmp/buff-hva-def.dat"
-            #(./codeC/execdef < $outputFileHva ) > $outputFileDef
+            ( grep -E "^$pwrPlantNbr;-|^[0-9]+;[^-]+;-;-|^[0-9]+;-;-|^[0-9]+;-|^[0-9]+$" "$inputFile" | cut -d ";" -f3,7,8 | sort -t ";" -k2,2n | tr '-' '0' ) > "$outputFileHva"
+            outputFileDef="./tmp/buff-hva-def.dat"
+            (./codeC/execdef < $outputFileHva ) > $outputFileDef
             # Success
             echo "Extraction terminée. Les données HV-A des postes et des consommateurs sont dans $outputFileHva"
         ;;
@@ -178,7 +189,8 @@
             # Read every line (except the first (categories)) of the input file
             # Check if it's a HV-B (column 2 and 7 not empty (different of '-') and column 3 empty)
             # Add columns 1, 2 and 7 in the HV-B buffer file
-            grep -E "^$pwrPlantNbr;[^-]+;-;-;-|[0-9]+;-;-|[0-9]+;-|[0-9]+$" | cut -d ";" -f2,7,8 | ./codeC/execdef >> "$outputFileHvb"
+            #grep -E "^$pwrPlantNbr;[^-]+;-;-;-|[0-9]+;-;-|[0-9]+;-|[0-9]+$" | cut -d ";" -f2,7,8 >> "$outputFileHvb"
+            grep -E "^$pwrPlantNbr;[^-]+;-;-;[0-9-];-;[0-9-];[0-9-]$" | cut -d ";" -f2,7,8 >> "$outputFileHvb"
             # Success
             echo "Extraction terminée. Les données HV-B des postes et des consommateurs sont dans $outputFileHvb"
         ;;
@@ -208,3 +220,8 @@
 
 # Confirm end of the treatment
     echo "Traitement terminé. Les résultats sont dans le fichier du dossier tests."
+    timeEnd=$(date +%s.%N)
+    totalTime=$( echo "($timeEnd - $timeStart) - $compilationTime" | bc )
+    # Conversion of the to use printf (conversion point and coma)
+    LC_NUMERIC=C printf "Durée de la compilation : %.3f secondes\n" "$compilationTime"
+    LC_NUMERIC=C printf "Durée totale du script hors compilation et création de dossier : %.3f secondes\n" "$totalTime"
