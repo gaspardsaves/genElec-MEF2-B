@@ -67,4 +67,5 @@ Réalisation des premiers tests avec des pipes vers le fichier C pour les HVA, t
 Implémentation du temps dans le script shell et réglage de petits détails par rapport aux attendus.
 
 12 - 12 - 24 :
-Amélioation de la compléxité et débug script et grep.
+Amélioration significative de la compléxité et débug script et grep.
+Implémentation de lv minmax

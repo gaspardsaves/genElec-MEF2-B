@@ -4,6 +4,7 @@
 # A faire gestion des permissions
     directory1="tmp"
     directory2="graphs"
+    directory3="outputs"
     checkDirectory () {
         local directory=$1
         if [ -d "$directory" ]; then # Clean the directory
@@ -16,6 +17,7 @@
     }
     checkDirectory "$directory1"
     checkDirectory "$directory2"
+    checkDirectory "$directory3"
 
 # Initializing processing time measure
     timeStart=$(date +%s.%N)
@@ -115,79 +117,99 @@
 
 # Initializing compilation time measure
     compilationStart=$(date +%s.%N)
-# Compilatio(./codeC/execdef < $outputFileHvb ) > $outputFileDefn of the code C and check if it's successful
+# Compilation of the code C and check if it's successful
     echo "____ ALL ____" > make.log
-    echo "$(date): Compilation" >> make.log
+    echo "$(date): Compilation data" >> make.log
     make -C ./codeC >> make.log 2>&1 # Voir si on garde cette redirection ou juste l'erreur
-    if [ $? -eq 0 ]; then
-        echo "Compilation réussie. Détail dans le fichier make.log"
+    if [[ $? -eq 0 ]] ; then
+        echo "Compilation réussie." >> make.log
     else
         echo "Echec de compilation. Voir erreurs dans le fichier make.log."
         exit 111
     fi
+
+    if [[ "$typeCons" == "all" ]] ; then
+        echo "____ RATIO ____" >> make.log
+        echo "$(date): Compilation ratio" >> make.log
+        make ratio -C ./codeC >> make.log 2>&1 # Voir si on garde cette redirection ou juste l'erreur
+        if [ $? -eq 0 ]; then
+            echo "Compilation ration réussie." >> make.log
+        else
+            echo "Echec de compilation. Voir erreurs dans le fichier make.log."
+            exit 112
+        fi
+    fi
+
 # End of measure of compilation time
     compilationEnd=$(date +%s.%N)
     compilationTime=$( echo "$compilationEnd - $compilationStart" | bc )
 
-# Data treatment 
+# Data treatment
+
+    # Output file naming and initialization of the file
+        if [[ $# = 4 ]] ; then
+            outputFile=./outputs/${typeStation}_${typeCons}_${pwrPlantNbr}.csv
+        else
+            outputFile=./outputs/${typeStation}_${typeCons}.csv
+        fi
+        > "$outputFile"
+
     # Use of switch case loop
     case "$typeStation" in
         'lv' )
             # LV data
-            # Name and address of the lv buffer file
-                outputFileLv="./tmp/buff-lv.dat"
-                # Create or clean the LV buffer file 
-                > "$outputFileLv"
             # Read every line (except the first (categories)) of the input file
             # Check if it's a LV (column 4 and 7 not empty (different of '-'))
             # Add columns 4, 7 and 8 in the lv buffer file
             case "$typeCons" in
                 'all' )
                     # All consumers data
-                    grep -E "^$pwrPlantNbr;-;[0-9-]+;[^-]+;[0-9-]+;[0-9-]+;[0-9-]+;[0-9-]+$" "$inputFile" | cut -d ";" -f4,7,8 |  tr '-' '0' | ./codeC/execdef | sort -t ";" -k2,2n > "$outputFileLv"
+                    grep -E "^$pwrPlantNbr;-;[0-9-]+;[^-]+;" "$inputFile" | cut -d ";" -f4,7,8 |  tr '-' '0' | ./codeC/execdata | sort -t ":" -k2,2n > "$outputFile"
+                    buffLvMinmax="./tmp/buff-lv_all_minmax.csv"
+                    > "$buffLvMinmax"
+                    lvMinmax="./tmp/lv_all_minmax.csv"
+                    #echo "___LES 10 PLUS PETITES CAPACITÉS___" > "$buffLvMinmax"
+                    head -n 10 "$outputFile" >> "$buffLvMinmax"
+                    #echo "___LES 10 PLUS GROSSES CAPACITÉS___" >> "$buffLvMinmax"
+                    tail -n 10 "$outputFile" >> "$buffLvMinmax"
+                    #cat "$buffLvMinmax" | ./codeC/execratio | sort -t ";" -k2,2n > "$buffLvMinmax"
+                    # Vérifier que le fichier a bien 20 lignes
+                    cat "$buffLvMinmax" | ./codeC/execratio | sort -t ";" -k4,4n | cut -d ";" -f1-3  > "$lvMinmax"
                 ;;
                 'comp' )
                     # Company consumer data
-                    grep -E "^$pwrPlantNbr;-;[0-9-]+;[^-]+;[0-9-]+;-;[0-9-]+;[0-9-]+$" "$inputFile" | cut -d ";" -f4,7,8 | tr '-' '0' | ./codeC/execdef | sort -t ";" -k2,2n > "$outputFileLv"
+                    grep -E "^$pwrPlantNbr;-;[0-9-]+;[^-]+;[0-9-]+;-;[0-9-]+;[0-9-]+$" "$inputFile" | cut -d ";" -f4,7,8 | tr '-' '0' | ./codeC/execdata | sort -t ":" -k2,2n > "$outputFile"
                 ;;
                 'indiv' )
                     # Individuals consumers data
-                    grep -E "^$pwrPlantNbr;-;[0-9-]+;[^-]+;-;[0-9-]+;[0-9-]+;[0-9-]+$" "$inputFile" | cut -d ";" -f4,7,8 | tr '-' '0' | ./codeC/execdef | sort -t ";" -k2,2n > "$outputFileLv"
+                    grep -E "^$pwrPlantNbr;-;[0-9-]+;[^-]+;-;[0-9-]+;[0-9-]+;[0-9-]+$" "$inputFile" | cut -d ";" -f4,7,8 | tr '-' '0' | ./codeC/execdata | sort -t ":" -k2,2n > "$outputFile"
 
                 ;;
             esac
             # Success
-            echo "Extraction terminée. Les données des postes et des consommateurs LV nécessaires sont dans $outputFileLv"
+            echo "Extraction terminée. Les données des postes et des consommateurs LV nécessaires sont dans $outputFile"
         ;;
         'hva' )
             # HV-A data
             # Output file
-                # Name and address of the HV-A buffer file
-                outputFileHva="./tmp/buff-hva.dat"
-                # Create or clean the HV-A buffer file 
-                > "$outputFileHva"
             # Read every line (except the first (categories)) of the input file
             # Check if it's a HV-A (column 3 and 7 not empty (different of '-') and column 4 empty)
 
-            grep -E "^$pwrPlantNbr;[0-9-]+;[^-]+;-;[0-9-]+;-;[0-9-]+;[0-9-]+$" "$inputFile" | cut -d ";" -f3,7,8 | tr '-' '0' | ./codeC/execdef | sort -t ";" -k2,2n > "$outputFileHva"
+            grep -E "^$pwrPlantNbr;[0-9-]+;[^-]+;-;[0-9-]+;-;[0-9-]+;[0-9-]+$" "$inputFile" | cut -d ";" -f3,7,8 | tr '-' '0' | ./codeC/execdata | sort -t ":" -k2,2n > "$outputFile"
 
             # Success
-            echo "Extraction terminée. Les données HV-A des postes et des consommateurs sont dans $outputFileHva"
+            echo "Extraction terminée. Les données HV-A des postes et des consommateurs sont dans $outputFile"
         ;;
         'hvb' )
             # HV-B data
             # Output file
-                # Name and address of the HV-B buffer file
-                outputFileHvb="./tmp/buff-hvb.dat"
-                # Create or clean the HV-B buffer file 
-                > "$outputFileHvb"
             # Read every line (except the first (categories)) of the input file
             # Check if it's a HV-B (column 2 and 7 not empty (different of '-') and column 3 empty)
             # Add columns 1, 2 and 7 in the HV-B buffer file
-            grep -E "^$pwrPlantNbr;[^-]+;-;-;([0-9-]+);-;([0-9-]+);([0-9-]+)$" "$inputFile" | cut -d ";" -f2,7,8 | tr '-' '0' | ./codeC/execdef | sort -t ";" -k2,2n > "$outputFileHvb"
+            grep -E "^$pwrPlantNbr;[^-]+;-;-;([0-9-]+);-;([0-9-]+);([0-9-]+)$" "$inputFile" | cut -d ";" -f2,7,8 | tr '-' '0' | ./codeC/execdata | sort -t ":" -k2,2n > "$outputFile"
            
             # Success
-            echo "Extraction terminée. Les données HV-B des postes et des consommateurs sont dans $outputFileHvb"
+            echo "Extraction terminée. Les données HV-B des postes et des consommateurs sont dans $outputFile"
         ;;
     esac
 
@@ -196,10 +218,10 @@
     echo "$(date): Suppression des exécutables" >> make.log
     make clean -C ./codeC >> make.log 2>&1 # Voir si on garde cette redirection globale ou juste l'erreur
     if [ $? -eq 0 ]; then
-        echo "Suppression des exécutables réussie. Détail dans le fichier make.log"
+        echo "Suppression des exécutables réussie." >> make.log
     else
         echo "Echec de la suppression des exécutables. Voir les erreurs dans le fichier make.log."
-        exit 112
+        exit 113
     fi
 
 # Delete buffer file and check if it's successful
@@ -207,10 +229,10 @@
     echo "$(date): Suppression des fichiers tampons" >> make.log
     # make cleanfile -C ./codeC >> make.log 2>&1 # Voir si on garde cette redirection globale ou juste l'erreur 
     #if [ $? -eq 0 ]; then
-        #echo "Suppression des fichiers tampons réussie. Détail dans le fichier make.log"
+        #echo "Suppression des fichiers tampons réussie" >> make.log
     #else
         #echo "Echec de suppression des fichiers tampons. Voir erreurs dans le fichier make.log."
-        #exit 113
+        #exit 114
     #fi
 
 # Confirm end of the treatment
