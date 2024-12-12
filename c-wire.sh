@@ -115,7 +115,7 @@
 
 # Initializing compilation time measure
     compilationStart=$(date +%s.%N)
-# Compilation of the code C and check if it's successful
+# Compilatio(./codeC/execdef < $outputFileHvb ) > $outputFileDefn of the code C and check if it's successful
     echo "____ ALL ____" > make.log
     echo "$(date): Compilation" >> make.log
     make -C ./codeC >> make.log 2>&1 # Voir si on garde cette redirection ou juste l'erreur
@@ -144,15 +144,16 @@
             case "$typeCons" in
                 'all' )
                     # All consumers data
-                    grep -E "^$pwrPlantNbr;-;-|[0-9]+;[^-]+;-|[0-9]+;-|[0-9]+;-|[0-9]+;-|[0-9]+$" "$inputFile" | cut -d ";" -f4,7,8 | ./codeC/execdef >> "$outputFileLv"
+                    grep -E "^$pwrPlantNbr;-;[0-9-]+;[^-]+;[0-9-]+;[0-9-]+;[0-9-]+;[0-9-]+$" "$inputFile" | cut -d ";" -f4,7,8 |  tr '-' '0' | ./codeC/execdef | sort -t ";" -k2,2n > "$outputFileLv"
                 ;;
                 'comp' )
                     # Company consumer data
-                    grep -E "^$pwrPlantNbr;-;-|[0-9]+;[^-]+;-|[0-9]+;-;-|[0-9]+;-|[0-9]+$" "$inputFile" | cut -d ";" -f4,7,8 | ./codeC/execdef >> "$outputFileLv"
+                    grep -E "^$pwrPlantNbr;-;[0-9-]+;[^-]+;[0-9-]+;-;[0-9-]+;[0-9-]+$" "$inputFile" | cut -d ";" -f4,7,8 | tr '-' '0' | ./codeC/execdef | sort -t ";" -k2,2n > "$outputFileLv"
                 ;;
                 'indiv' )
                     # Individuals consumers data
-                    grep -E "^$pwrPlantNbr;-;-|[0-9]+;[^-]+;-;-|[0-9]+;-|[0-9]+;-|[0-9]+$" "$inputFile" | cut -d ";" -f4,7,8 | ./codeC/execdef >> "$outputFileLv"
+                    grep -E "^$pwrPlantNbr;-;[0-9-]+;[^-]+;-;[0-9-]+;[0-9-]+;[0-9-]+$" "$inputFile" | cut -d ";" -f4,7,8 | tr '-' '0' | ./codeC/execdef | sort -t ";" -k2,2n > "$outputFileLv"
+
                 ;;
             esac
             # Success
@@ -167,15 +168,9 @@
                 > "$outputFileHva"
             # Read every line (except the first (categories)) of the input file
             # Check if it's a HV-A (column 3 and 7 not empty (different of '-') and column 4 empty)
-            # Add columns 1, 2, 3 and 7 in the HV-A buffer file
-            #./codeC/execdef < ( grep -E "^$pwrPlantNbr;-|[0-9]+;[^-]+;-;-|[0-9]+;-;-|[0-9]+;-|[0-9]+$" "$inputFile" | cut -d ";" -f3,7,8 | sort -t ";" -k2,2n | tr '-' '0' ) > "$outputFileHva"
-            
-            #( grep -E "^$pwrPlantNbr;-|[0-9]+;[^-]+;-;-|[0-9]+;-;-|[0-9]+;-|[0-9]+$" "$inputFile" | cut -d ";" -f3,7,8 | sort -t ";" -k2,2n | tr '-' '0' | ./codeC/execdef ) > "$outputFileHva"
-            # Test ok avec cette commande manque le tri par consommation croissante et nécessité de passer en long int car sinon chiffres négatifs
 
-            ( grep -E "^$pwrPlantNbr;-|^[0-9]+;[^-]+;-;-|^[0-9]+;-;-|^[0-9]+;-|^[0-9]+$" "$inputFile" | cut -d ";" -f3,7,8 | sort -t ";" -k2,2n | tr '-' '0' ) > "$outputFileHva"
-            outputFileDef="./tmp/buff-hva-def.dat"
-            (./codeC/execdef < $outputFileHva ) > $outputFileDef
+            grep -E "^$pwrPlantNbr;[0-9-]+;[^-]+;-;[0-9-]+;-;[0-9-]+;[0-9-]+$" "$inputFile" | cut -d ";" -f3,7,8 | tr '-' '0' | ./codeC/execdef | sort -t ";" -k2,2n > "$outputFileHva"
+
             # Success
             echo "Extraction terminée. Les données HV-A des postes et des consommateurs sont dans $outputFileHva"
         ;;
@@ -189,8 +184,8 @@
             # Read every line (except the first (categories)) of the input file
             # Check if it's a HV-B (column 2 and 7 not empty (different of '-') and column 3 empty)
             # Add columns 1, 2 and 7 in the HV-B buffer file
-            #grep -E "^$pwrPlantNbr;[^-]+;-;-;-|[0-9]+;-;-|[0-9]+;-|[0-9]+$" | cut -d ";" -f2,7,8 >> "$outputFileHvb"
-            grep -E "^$pwrPlantNbr;[^-]+;-;-;[0-9-];-;[0-9-];[0-9-]$" | cut -d ";" -f2,7,8 >> "$outputFileHvb"
+            grep -E "^$pwrPlantNbr;[^-]+;-;-;([0-9-]+);-;([0-9-]+);([0-9-]+)$" "$inputFile" | cut -d ";" -f2,7,8 | tr '-' '0' | ./codeC/execdef | sort -t ";" -k2,2n > "$outputFileHvb"
+           
             # Success
             echo "Extraction terminée. Les données HV-B des postes et des consommateurs sont dans $outputFileHvb"
         ;;
@@ -222,6 +217,6 @@
     echo "Traitement terminé. Les résultats sont dans le fichier du dossier tests."
     timeEnd=$(date +%s.%N)
     totalTime=$( echo "($timeEnd - $timeStart) - $compilationTime" | bc )
-    # Conversion of the to use printf (conversion point and coma)
+    # Conversion of the locale to use printf (conversion point and coma)
     LC_NUMERIC=C printf "Durée de la compilation : %.3f secondes\n" "$compilationTime"
     LC_NUMERIC=C printf "Durée totale du script hors compilation et création de dossier : %.3f secondes\n" "$totalTime"
