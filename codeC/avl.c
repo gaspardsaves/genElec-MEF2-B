@@ -153,7 +153,7 @@ ElecEntity* insert(ElecEntity* pHead, int id, long capacity, long consumption, i
 void PrintPrefix(ElecEntity* Tree){
     if(Tree!=NULL){
         PrintPrefix(Tree->pLeft);
-        printf("%d;%ld;%ld\n", Tree->id, Tree->capacity, Tree->consumption);
+        printf("%d:%ld:%ld\n", Tree->id, Tree->capacity, Tree->consumption);
         PrintPrefix(Tree->pRight);
     }
 }

@@ -16,6 +16,8 @@
                     # All consumers data
                     #grep -E "^$pwrPlantNbr;-;((-)|([0-9]+));[^-]+;((-)|([0-9]+));((-)|([0-9]+));((-)|([0-9]+));((-)|([0-9]+))$" "$inputFile" | cut -d ";" -f4,7,8 |  tr '-' '0' | ./codeC/execdef > "$outputFileLv"
                     grep -E "^$pwrPlantNbr;-;[0-9-]+;[^-]+;[0-9-]+;[0-9-]+;[0-9-]+;[0-9-]+$" "$inputFile" | cut -d ";" -f4,7,8 |  tr '-' '0' | ./codeC/execdef | sort -t ";" -k2,2n > "$outputFileLv"
+                    #grep -E "^$pwrPlantNbr;-;[0-9-]+;[^-]+;[0-9-]+;[0-9-]+;[0-9-]+;[0-9-]+$" "$inputFile" | cut -d ";" -f4,7,8 |  tr '-' '0' | ./codeC/execdef | sort -t ";" -k2,2n > "$outputFileLv"
+                    #grep -E "^$pwrPlantNbr;-;[0-9-]+;[^-]+;[0-9-]+;[0-9-]+;[0-9-]+;[0-9-]+$" "$inputFile" | cut -d ";" -f4,7,8 |  tr '-' '0' | ./codeC/execdef | sort -t ";" -k2,2n > "$outputFileLv"
                     #grep -E "^$pwrPlantNbr;-;((-)|([0-9]+));[^-]+;((-)|([0-9]+));((-)|([0-9]+));((-)|([0-9]+));((-)|([0-9]+))$" "$inputFile" | cut -d ";" -f4,7,8 | tr '-' '0' > "$outputFileLv"
                     #outputFileDef="./tmp/buff-lvall-def.dat"
                     #(./codeC/execdef < $outputFileLv ) > $outputFileDef

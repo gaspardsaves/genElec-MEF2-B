@@ -1,18 +1,14 @@
 #include <stdio.h>
-#include <stdlib.h>
 
-#include "structures.h"
-#include "smartrobusnest.h"
-#include "avl.h"
-
-int Ratio(int capacity, int consumption){
-    return consumption-capacity;
+long Ratio(long capacity, long consumption){
+    return capacity-consumption;
 }
 
 int main(){
-    int id, capacity, consumption;
-    while (scanf("%d;%d;%d", &id, &capacity, &consumption) == 3){
-        printf("%d;%d", id, Ratio(capacity, consumption,)");
+    int id;
+    long capacity, consumption;
+    while (scanf("%d:%ld:%ld", &id, &capacity, &consumption) == 3){
+        printf("%d:%ld:%ld:%ld\n", id, capacity, consumption, Ratio(capacity, consumption));
     }
     return 0;
 }
