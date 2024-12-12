@@ -4,8 +4,8 @@
 
     typedef struct post_elec {
         int id;
-        int capacity;
-        int consumption;
+        long capacity;
+        long consumption;
         int balanceFactor;
         struct post_elec* pLeft;
         struct post_elec* pRight;

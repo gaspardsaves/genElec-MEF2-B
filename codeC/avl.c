@@ -96,7 +96,7 @@ ElecEntity* BringBalance(ElecEntity* Tree){
     return Tree;
 }
 
-ElecEntity* create(int id, int capacity, int consumption){
+ElecEntity* create(int id, long capacity, long consumption){
     //Memory allocation for a new ElecEntity
     ElecEntity* new = malloc(sizeof(ElecEntity));
     //Verification if malloc is doing good work
@@ -113,7 +113,7 @@ ElecEntity* create(int id, int capacity, int consumption){
     return new;
 }
 
-ElecEntity* insert(ElecEntity* pHead, int id, int capacity, int consumption, int* h){
+ElecEntity* insert(ElecEntity* pHead, int id, long capacity, long consumption, int* h){
     //Creation of a new node if phead is empty
     if(pHead == NULL){
         *h = 1;
@@ -153,7 +153,7 @@ ElecEntity* insert(ElecEntity* pHead, int id, int capacity, int consumption, int
 void PrintPrefix(ElecEntity* Tree){
     if(Tree!=NULL){
         PrintPrefix(Tree->pLeft);
-        printf("%d;%d;%d\n", Tree->id, Tree->capacity, Tree->consumption);
+        printf("%d;%ld;%ld\n", Tree->id, Tree->capacity, Tree->consumption);
         PrintPrefix(Tree->pRight);
     }
 }
@@ -180,9 +180,10 @@ void FreeTree(ElecEntity* Tree){
 //*
 int main(){
     ElecEntity* pTree = NULL;
-    int id, capacity, consumption;
+    int id;
+    long capacity, consumption;
     int* h = malloc(sizeof(int));
-    while (scanf("%d;%d;%d", &id, &capacity, &consumption) == 3) {
+    while (scanf("%d;%ld;%ld", &id, &capacity, &consumption) == 3) {
         pTree = insert(pTree, id, capacity, consumption, h);
     }
     PrintPrefix(pTree);

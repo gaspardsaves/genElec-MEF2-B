@@ -6,8 +6,8 @@
     ElecEntity* RotateRight(ElecEntity* Tree);
     ElecEntity* RotateLeft(ElecEntity* Tree);
     ElecEntity* BringBalance(ElecEntity* Tree);
-    ElecEntity* create(int id, int capacity, int consumption);
-    ElecEntity* insert(ElecEntity* pHead, int id, int capacity, int consumption, int* h);
+    ElecEntity* create(int id, long capacity, long consumption);
+    ElecEntity* insert(ElecEntity* pHead, int id, long capacity, long consumption, int* h);
     void PrintPrefix(ElecEntity* Tree);
     void FreeTree(ElecEntity* Tree);
 
