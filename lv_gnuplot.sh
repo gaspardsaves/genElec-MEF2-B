@@ -11,4 +11,4 @@ set title "Graph baton"
 set style line 1 lc rgb '#FF0000'
 set style line 2 lc rgb '#00FF00'
 
-plot "test.csv" using  0:2:(column(2) > 25 ? 1 : 2) with boxes linecolor variable title "graph col"
+plot "test.csv" using  0:2:(column(2) > 0 ? 1 : 2) with boxes linecolor variable title "graph col"
