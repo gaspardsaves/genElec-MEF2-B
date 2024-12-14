@@ -158,7 +158,7 @@ void PrintPrefix(ElecEntity* Tree){
     }
 }
 
-/*
+/* Print test
 void PrintPrefix2(ElecEntity* Tree){
     if(Tree==NULL){
         return ;
@@ -193,7 +193,7 @@ int main(){
 }
 //*/
 
-/*
+/* // Version test
 int main(){
     ElecEntity* Tree = create(1, 160000, 1);
     int* h = malloc(sizeof(int));

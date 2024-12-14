@@ -1,18 +1,39 @@
 #!/bin/bash
 
-# Checking the existence and clean-up of 'graphs' and 'tmp' directories using a function
-# A faire gestion des permissions
+# Checking the existence and clean-up of 'tmp', 'graphs' and 'outputs' directories using a function
     directory1="tmp"
     directory2="graphs"
     directory3="outputs"
     checkDirectory () {
+        # Use of a local variable to avoid conflicts
         local directory=$1
-        if [ -d "$directory" ]; then # Clean the directory
-            rm -f "$directory"/*
-            echo "Le dossier '$directory' a été nettoyé avec succès."
+        if [ -d "$directory" ]; then
+            # Check of writing right to clean the directory
+            if [ -w "$directory" ]; then
+                # Clean the directory
+                rm -f "$directory"/*
+                # Check if cleaning is successful
+                if [ $? -eq 0 ]; then
+                    echo "Le dossier '$directory' a été nettoyé avec succès."
+                else
+                    echo "Problème lors du nettoyage du répertoire '$directory'. Vérifiez si vous n'avez pas des fichiers protégés."
+                    exit 101
+                fi
+            else
+                echo "Droits d'écriture manquants sur le répertoire '$directory'."
+                echo "Veuillez corriger les permissions et réitérer la demande"
+                exit 102
+            fi
         else
-            mkdir "$directory"  # Create the directory
-            echo "Le dossier '$directory' n'existait pas et a été créé avec succès"
+            # Create the directory
+            mkdir -m 755 "$directory"
+            # Check if creation is successful
+            if [ $? -eq 0 ]; then
+                echo "Le répertoire '$directory' n'existait pas et a été créé avec succès"
+            else
+                echo "Impossible de créer le répertoire '$directory'. Vérifiez vos permissions."
+                exit 103
+            fi
         fi
     }
     checkDirectory "$directory1"
@@ -29,7 +50,7 @@
             if [[ "$arg" == "-h" || "$arg" == "--help" ]] ; then
                 echo "Option d'aide détectée"
                 cat "help.txt"
-                exit 101
+                exit 104
             fi
         done
 
@@ -37,14 +58,14 @@
         if [[ $# -lt 3 ]] ; then
             echo "Nombre d'arguments insuffisant. Consultez l'aide ci-dessous."
             cat "help.txt"
-            exit 102
+            exit 105
         fi
 
     # Checking the maximum number of arguments
         if [[ $# -gt 4 ]] ; then
             echo "Nombre d'arguments trop important. Consultez l'aide ci-dessous."
             cat "help.txt"
-            exit 103
+            exit 106
         fi
 
     # Assignement and checking consistency of arguments
@@ -56,12 +77,12 @@
                 if [[ ! ( -f "$inputFile" ) ]] ; then
                     echo "Le fichier de données n'existe pas à cet emplacement. Consultez l'aide ci-dessous."
                     cat "help.txt"
-                    exit 104
+                    exit 107
                 elif [[  ! ( -r "$inputFile" ) ]] ; then
                     echo "Droit de lecture manquant sur ce fichier."
                     echo "Veuillez corriger les permissions et réitérer la demande. Consultez l'aide ci-dessous."
                     cat "help.txt"
-                    exit 105
+                    exit 108
                 fi
         # Second argument
             # Type of electric post to be treated (hvb, hva, lv)
@@ -71,7 +92,7 @@
                 if [[ "$typeStation" != "hvb" && "$typeStation" != "hva" && "$typeStation" != "lv" ]] ; then
                     echo "Type de poste électrique invalide. Consultez l'aide ci-dessous."
                     cat "help.txt"
-                    exit 106
+                    exit 109
                 fi
 
         # Third argument
@@ -82,18 +103,18 @@
                 if [[ "$typeCons" != "comp" && "$typeCons" != "indiv" && "$typeCons" != "all" ]] ; then
                     echo "Type de consommateur invalide. Consultez l'aide ci-dessous."
                     cat "help.txt"
-                    exit 107
+                    exit 110
                 fi
 
         # Checking argument combinations
             if [[ "$typeStation" == "hvb" && "$typeCons" != "comp" ]] ; then
                 echo "La station HV-B n'a pour consommateur que des entreprises (argument 'comp'). Consultez l'aide ci-dessous."
                 cat "help.txt"
-                exit 108
+                exit 111
             elif [[ "$typeStation" == "hva" && "$typeCons" != "comp" ]] ; then
                 echo "La station HV-A n'a pour consommateur que des entreprises (argument 'comp'). Consultez l'aide ci-dessous."
                 cat "help.txt"
-                exit 109
+                exit 112
             fi
 
         # Fourth argument
@@ -103,7 +124,7 @@
                     if [[ "$pwrPlantNbr" != "1" && "$pwrPlantNbr" != "2" && "$pwrPlantNbr" != "3" && "$pwrPlantNbr" != "4" && "$pwrPlantNbr" != "5" ]] ; then
                         echo "Le numéro de centrale est incorrect. Consultez l'aide ci-dessous."
                         cat "help.txt"
-                        exit 110
+                        exit 113
                     fi
                 #Confirmation of user input and what is going to be done
                     echo "Arguments corrects"
@@ -120,23 +141,23 @@
 # Compilation of the code C and check if it's successful
     echo "____ ALL ____" > make.log
     echo "$(date): Compilation data" >> make.log
-    make -C ./codeC >> make.log 2>&1 # Voir si on garde cette redirection ou juste l'erreur
+    make -C ./codeC >> make.log 2>&1
     if [[ $? -eq 0 ]] ; then
-        echo "Compilation réussie." >> make.log
+        echo "Compilation data réussie." >> make.log
     else
-        echo "Echec de compilation. Voir erreurs dans le fichier make.log."
-        exit 111
+        echo "Echec de compilation data. Voir erreurs dans le fichier make.log."
+        exit 114
     fi
 
     if [[ "$typeCons" == "all" ]] ; then
         echo "____ RATIO ____" >> make.log
         echo "$(date): Compilation ratio" >> make.log
-        make ratio -C ./codeC >> make.log 2>&1 # Voir si on garde cette redirection ou juste l'erreur
+        make ratio -C ./codeC >> make.log 2>&1
         if [ $? -eq 0 ]; then
-            echo "Compilation ration réussie." >> make.log
+            echo "Compilation ratio réussie." >> make.log
         else
-            echo "Echec de compilation. Voir erreurs dans le fichier make.log."
-            exit 112
+            echo "Echec de compilation ratio. Voir erreurs dans le fichier make.log."
+            exit 115
         fi
     fi
 
@@ -146,13 +167,25 @@
 
 # Data treatment
 
-    # Output file naming and initialization of the file
+    # Output(s) file(s) naming and initialization of the file(s)
         if [[ $# = 4 ]] ; then
             outputFile=./outputs/${typeStation}_${typeCons}_${pwrPlantNbr}.csv
+            if [[ "$typeCons" == "all" ]] ; then
+                outputMinmax=./outputs/${typeStation}_${typeCons}_${pwrPlantNbr}_minmax.csv
+                buffLvMinmax=./tmp/buff_${typeStation}_${typeCons}_${pwrPlantNbr}_minmax.csv
+            fi
         else
             outputFile=./outputs/${typeStation}_${typeCons}.csv
+            if [[ "$typeCons" == "all" ]] ; then
+                outputMinmax=./outputs/${typeStation}_${typeCons}_minmax.csv
+                buffLvMinmax=./tmp/buff_${typeStation}_${typeCons}_minmax.csv
+            fi
         fi
         > "$outputFile"
+        if [[ "$typeCons" == "all" ]] ; then
+            > "$outputMinmax"
+            > "$buffLvMinmax"
+        fi
 
     # Use of switch case loop
     case "$typeStation" in
@@ -164,50 +197,61 @@
             case "$typeCons" in
                 'all' )
                     # All consumers data
-                    grep -E "^$pwrPlantNbr;-;[0-9-]+;[^-]+;" "$inputFile" | cut -d ";" -f4,7,8 |  tr '-' '0' | ./codeC/execdata | sort -t ":" -k2,2n > "$outputFile"
-                    buffLvMinmax="./tmp/buff-lv_all_minmax.csv"
-                    > "$buffLvMinmax"
-                    lvMinmax="./tmp/lv_all_minmax.csv"
-                    #echo "___LES 10 PLUS PETITES CAPACITÉS___" > "$buffLvMinmax"
-                    head -n 10 "$outputFile" >> "$buffLvMinmax"
-                    #echo "___LES 10 PLUS GROSSES CAPACITÉS___" >> "$buffLvMinmax"
-                    tail -n 10 "$outputFile" >> "$buffLvMinmax"
-                    #cat "$buffLvMinmax" | ./codeC/execratio | sort -t ";" -k2,2n > "$buffLvMinmax"
-                    # Vérifier que le fichier a bien 20 lignes
-                    cat "$buffLvMinmax" | ./codeC/execratio | sort -t ";" -k4,4n | cut -d ";" -f1-3  > "$lvMinmax"
+                    # Initialization of output file columns
+                    echo "Station LV:Capacité:Consommation (tous)" > "$outputFile"
+                    grep -E "^$pwrPlantNbr;-;[0-9-]+;[^-]+;" "$inputFile" | cut -d ";" -f4,7,8 |  tr '-' '0' | ./codeC/execdata | sort -t ":" -k2,2n >> "$outputFile"
+                    if [[ "$(wc -l < "$outputFile")" -ge 21 ]] ; then
+                        #echo "___LES 10 PLUS PETITES CAPACITÉS___" > "$buffLvMinmax"
+                        tail -n +2 "$outputFile" | head -n 10 >> "$buffLvMinmax"
+                        #echo "___LES 10 PLUS GROSSES CAPACITÉS___" >> "$buffLvMinmax"
+                        tail -n 10 "$outputFile" >> "$buffLvMinmax"
+                        #cat "$buffLvMinmax" | ./codeC/execratio | sort -t ";" -k2,2n > "$buffLvMinmax"
+                        # Vérifier que le fichier a bien 20 lignes
+                        cat "$buffLvMinmax" | ./codeC/execratio | sort -t ";" -k4,4n | cut -d ";" -f1-3  > "$outputMinmax"
+                    else
+                        echo "Le réseau contient moins de 20 postes LV, il n'y aura pas de fichier $outputMinmax"
+                        # Voir si on fait un tri et un graphique juste dans ce cas
+                        rm "$buffLvMinmax"
+                        rm "$outputMinmax"
+                    fi
                 ;;
                 'comp' )
                     # Company consumer data
-                    grep -E "^$pwrPlantNbr;-;[0-9-]+;[^-]+;[0-9-]+;-;[0-9-]+;[0-9-]+$" "$inputFile" | cut -d ";" -f4,7,8 | tr '-' '0' | ./codeC/execdata | sort -t ":" -k2,2n > "$outputFile"
+                    # Initialization of output file columns
+                    echo "Station LV:Capacité:Consommation (entreprises)" > "$outputFile"
+                    grep -E "^$pwrPlantNbr;-;[0-9-]+;[^-]+;[0-9-]+;-;[0-9-]+;[0-9-]+$" "$inputFile" | cut -d ";" -f4,7,8 | tr '-' '0' | ./codeC/execdata | sort -t ":" -k2,2n >> "$outputFile"
                 ;;
                 'indiv' )
                     # Individuals consumers data
-                    grep -E "^$pwrPlantNbr;-;[0-9-]+;[^-]+;-;[0-9-]+;[0-9-]+;[0-9-]+$" "$inputFile" | cut -d ";" -f4,7,8 | tr '-' '0' | ./codeC/execdata | sort -t ":" -k2,2n > "$outputFile"
+                    # Initialization of output file columns
+                    echo "Station LV:Capacité:Consommation (particuliers)" > "$outputFile"
+                    grep -E "^$pwrPlantNbr;-;[0-9-]+;[^-]+;-;[0-9-]+;[0-9-]+;[0-9-]+$" "$inputFile" | cut -d ";" -f4,7,8 | tr '-' '0' | ./codeC/execdata | sort -t ":" -k2,2n >> "$outputFile"
 
                 ;;
             esac
             # Success
-            echo "Extraction terminée. Les données des postes et des consommateurs LV nécessaires sont dans $outputFile"
+            echo "Extraction terminée. Les données LV des postes et des consommateurs sont dans $outputFile"
         ;;
         'hva' )
             # HV-A data
-            # Output file
             # Read every line (except the first (categories)) of the input file
             # Check if it's a HV-A (column 3 and 7 not empty (different of '-') and column 4 empty)
 
-            grep -E "^$pwrPlantNbr;[0-9-]+;[^-]+;-;[0-9-]+;-;[0-9-]+;[0-9-]+$" "$inputFile" | cut -d ";" -f3,7,8 | tr '-' '0' | ./codeC/execdata | sort -t ":" -k2,2n > "$outputFile"
-
+            # Initialization of output file columns
+            echo "Station HV-A:Capacité:Consommation (entreprises)" > "$outputFile"
+            grep -E "^$pwrPlantNbr;[0-9-]+;[^-]+;-;[0-9-]+;-;[0-9-]+;[0-9-]+$" "$inputFile" | cut -d ";" -f3,7,8 | tr '-' '0' | ./codeC/execdata | sort -t ":" -k2,2n >> "$outputFile"
             # Success
             echo "Extraction terminée. Les données HV-A des postes et des consommateurs sont dans $outputFile"
         ;;
         'hvb' )
             # HV-B data
-            # Output file
             # Read every line (except the first (categories)) of the input file
             # Check if it's a HV-B (column 2 and 7 not empty (different of '-') and column 3 empty)
             # Add columns 1, 2 and 7 in the HV-B buffer file
-            grep -E "^$pwrPlantNbr;[^-]+;-;-;([0-9-]+);-;([0-9-]+);([0-9-]+)$" "$inputFile" | cut -d ";" -f2,7,8 | tr '-' '0' | ./codeC/execdata | sort -t ":" -k2,2n > "$outputFile"
-           
+
+            # Initialization of output file columns
+            echo "Station HV-A:Capacité:Consommation (entreprises)" > "$outputFile"
+            grep -E "^$pwrPlantNbr;[^-]+;-;-;([0-9-]+);-;([0-9-]+);([0-9-]+)$" "$inputFile" | cut -d ";" -f2,7,8 | tr '-' '0' | ./codeC/execdata | sort -t ":" -k2,2n >> "$outputFile"
             # Success
             echo "Extraction terminée. Les données HV-B des postes et des consommateurs sont dans $outputFile"
         ;;
@@ -221,24 +265,26 @@
         echo "Suppression des exécutables réussie." >> make.log
     else
         echo "Echec de la suppression des exécutables. Voir les erreurs dans le fichier make.log."
-        exit 113
+        exit 116
     fi
 
 # Delete buffer file and check if it's successful
     echo "____ CLEANFILE____" >> make.log
     echo "$(date): Suppression des fichiers tampons" >> make.log
-    # make cleanfile -C ./codeC >> make.log 2>&1 # Voir si on garde cette redirection globale ou juste l'erreur 
+    #make cleanfile -C ./codeC >> make.log 2>&1 # Voir si on garde cette redirection globale ou juste l'erreur 
     #if [ $? -eq 0 ]; then
         #echo "Suppression des fichiers tampons réussie" >> make.log
     #else
         #echo "Echec de suppression des fichiers tampons. Voir erreurs dans le fichier make.log."
-        #exit 114
+        #exit 117
     #fi
 
 # Confirm end of the treatment
-    echo "Traitement terminé. Les résultats sont dans le fichier du dossier tests."
+    echo "Traitement terminé. Les résultats sont dans le fichier du dossier 'outputs'."
+# Calculation of processing time
     timeEnd=$(date +%s.%N)
     totalTime=$( echo "($timeEnd - $timeStart) - $compilationTime" | bc )
-    # Conversion of the locale to use printf (conversion point and coma)
+# Display processing time
+    # Conversion of the locale (conversion point and coma) to use printf
     LC_NUMERIC=C printf "Durée de la compilation : %.3f secondes\n" "$compilationTime"
     LC_NUMERIC=C printf "Durée totale du script hors compilation et création de dossier : %.3f secondes\n" "$totalTime"

@@ -69,3 +69,10 @@ Implémentation du temps dans le script shell et réglage de petits détails par
 12 - 12 - 24 :
 Amélioration significative de la compléxité et débug script et grep.
 Implémentation de lv minmax
+Réalisation d'une fonction unique assurant le nommage des fichiers
+Ibrahima se charge des tests de l'utilitaire GnuPlot pour préparer son implémentation dans le projet
+
+14 - 12 -24 :
+Ajout de robustesse dans le shell et correction des derniers éléments de nommage des fichiers notamment et des noms de colonne dans les fichiers de sortie
+Rédaction d'un README correct en markdown
+Avancement et test des possibilités de l'opérateur GnuPlot
