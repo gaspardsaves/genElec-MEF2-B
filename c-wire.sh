@@ -200,14 +200,14 @@
                     # Initialization of output file columns
                     echo "Station LV:Capacité:Consommation (tous)" > "$outputFile"
                     grep -E "^$pwrPlantNbr;-;[0-9-]+;[^-]+;" "$inputFile" | cut -d ";" -f4,7,8 |  tr '-' '0' | ./codeC/execdata | sort -t ":" -k2,2n >> "$outputFile"
+                    
                     if [[ "$(wc -l < "$outputFile")" -ge 21 ]] ; then
                         #echo "___LES 10 PLUS PETITES CAPACITÉS___" > "$buffLvMinmax"
                         tail -n +2 "$outputFile" | head -n 10 >> "$buffLvMinmax"
                         #echo "___LES 10 PLUS GROSSES CAPACITÉS___" >> "$buffLvMinmax"
                         tail -n 10 "$outputFile" >> "$buffLvMinmax"
-                        #cat "$buffLvMinmax" | ./codeC/execratio | sort -t ";" -k2,2n > "$buffLvMinmax"
-                        # Vérifier que le fichier a bien 20 lignes
-                        cat "$buffLvMinmax" | ./codeC/execratio | sort -t ";" -k4,4n | cut -d ";" -f1-3  > "$outputMinmax"
+                        cat "$buffLvMinmax" | ./codeC/execratio | sort -t ":" -k4,4n | cut -d ":" -f1-4  > "$outputMinmax"
+                        # Laisser 1-4 on verra après gnuplot pour réduire à 1-3
                     else
                         echo "Le réseau contient moins de 20 postes LV, il n'y aura pas de fichier $outputMinmax"
                         # Voir si on fait un tri et un graphique juste dans ce cas
