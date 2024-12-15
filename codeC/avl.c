@@ -149,27 +149,7 @@ ElecEntity* insert(ElecEntity* pHead, int id, long capacity, long consumption, i
     return pHead;
 }
 
-// Print the three with a prefix process
-void PrintPrefix(ElecEntity* Tree){
-    if(Tree!=NULL){
-        PrintPrefix(Tree->pLeft);
-        printf("%d:%ld:%ld\n", Tree->id, Tree->capacity, Tree->consumption);
-        PrintPrefix(Tree->pRight);
-    }
-}
-
-/* Print test
-void PrintPrefix2(ElecEntity* Tree){
-    if(Tree==NULL){
-        return ;
-    }
-    PrintPrefix2(Tree->pLeft);
-    printf("%d;%d;%d;%d\n", Tree->id, Tree->capacity, Tree->consumption, Tree->balanceFactor);
-    PrintPrefix2(Tree->pRight);
-}
-*/
-
-// Freeing allocated memory for tree
+// Freeing allocated memory for tree with a postfix process
 void FreeTree(ElecEntity* Tree){
     if(Tree!=NULL){
         FreeTree(Tree->pLeft);
@@ -177,42 +157,3 @@ void FreeTree(ElecEntity* Tree){
         free(Tree);
     }
 }
-//*
-int main(){
-    ElecEntity* pTree = NULL;
-    int id;
-    long capacity, consumption;
-    int* h = malloc(sizeof(int));
-    while (scanf("%d;%ld;%ld", &id, &capacity, &consumption) == 3) {
-        pTree = insert(pTree, id, capacity, consumption, h);
-    }
-    PrintPrefix(pTree);
-    FreeTree(pTree);
-    free(h);
-    return 0;
-}
-//*/
-
-/* // Version test
-int main(){
-    ElecEntity* Tree = create(1, 160000, 1);
-    int* h = malloc(sizeof(int));
-    Tree = insert(Tree, 1, 0, 2000, h);
-    Tree = insert(Tree, 2, 0, 2000, h);
-    Tree = insert(Tree, 1, 0, 2000, h);
-    Tree = insert(Tree, 1, 0, 2000, h);
-    Tree = insert(Tree, 1, 0, 2000, h);
-    Tree = insert(Tree, 3, 0, 2000, h);
-    Tree = insert(Tree, 1, 0, 2000, h);
-    Tree = insert(Tree, 1, 0, 2000, h);
-    int i = 0;
-    while(i<1000000){
-        Tree = insert(Tree, i, 0, 2000, h);
-        i++;
-    }
-    PrintPrefix2(Tree);
-    FreeTree(Tree);
-    free(h);
-    return 0;
-}
-//*/

@@ -8,9 +8,6 @@
     ElecEntity* BringBalance(ElecEntity* Tree);
     ElecEntity* create(int id, long capacity, long consumption);
     ElecEntity* insert(ElecEntity* pHead, int id, long capacity, long consumption, int* h);
-    void PrintPrefix(ElecEntity* Tree);
     void FreeTree(ElecEntity* Tree);
-
-    int main();
 
 #endif
