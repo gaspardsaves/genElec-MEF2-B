@@ -3,9 +3,9 @@
 **Projet C-WIRE :zap:, deuxième année de pré-ingénieur CY-Tech, semestre 1 2024-2025**
 
 ## :handshake: Collaborateurs :
-**[- Ibrahima Baldé-Cissé](https://github.com/IBBC78)**  
-**[- Jean-Luc Maslanka](https://github.com/JEAN-LUC7)**  
-**[- Gaspard Savès](https://github.com/gaspardsaves)**
+**- [Ibrahima Baldé-Cissé](https://github.com/IBBC78)**  
+**- [Jean-Luc Maslanka](https://github.com/JEAN-LUC7)**  
+**- [Gaspard Savès](https://github.com/gaspardsaves)**
 
 ## Description du projet :
 [:scroll: Lire le sujet](Projet_C-Wire_preIng2_2024_2025-v1.4-1.pdf)  
@@ -22,8 +22,8 @@ Après passage en entrée des données d'un réseau de transport d'électricité
 Vérifier la possession des droits d'exécution sur le script shell si ce n'est pas le cas : `chmod +x c-wire.sh`  
 Exécution du script shell : `./c-wire.sh` + paramètres  
 --> Pour avoir le détail des paramétres possibles du script : possibilité d'utiliser l'option `-h` ou `--help` commandes `./c-wire.sh -h` ou `./c-wire.sh --help` afin d'afficher l'aide  
-Un petit fichier de données permettant d'utiliser le programme se trouve dans le dossier *inputs* pour l'utiliser passer `./inputs/c-wire_v00.dat` en premier argument du script. Avec ce fichier de données les temps de traitements sont de l'ordre de l'instantané.  
-Si vous utilisez la v25 (9 millions de lignes) le temps de traitement maximum sur nos machines est de l'ordre de 10 secondes.  
+Un petit fichier de données permettant d'utiliser le programme se trouve dans le dossier *inputs* pour l'utiliser passer `./inputs/c-wire_v00.dat` en premier argument du script. Avec ce fichier de données, peu importe les paramètres choisis, les temps de traitements sont de l'ordre de l'instantané.  
+Si vous utilisez la v25 (9 millions de lignes) le temps de traitement maximum sur nos machines pour `lv all` est de l'ordre de 11 secondes.  
 
 **En fin d'exécution**  
 Un fichier `make.log` permet de constater les retours des commandes de compilation.  
@@ -36,6 +36,7 @@ Si vous souhaitez compiler et gérer le code C séparément cela est possible en
 `make -C ./codeC`  l'exécutable principal s'appelle alors `execdata`  
 `make ratio -C ./codeC` le deuxième exécutable s'appelle alors `execratio`  
 `make clean -C ./codeC` permet de supprimer les éxécutables  
+`make cleanratio -C ./codeC` permet de supprimer l'exécutable ratio  
 `make cleanfile -C ./codeC` permet des supprimer les fichiers tampons générés lors de l'exécution  
 
 ### :hammer_and_wrench: Cible débug
