@@ -76,3 +76,8 @@ Ibrahima se charge des tests de l'utilitaire GnuPlot pour préparer son impléme
 Ajout de robustesse dans le shell et correction des derniers éléments de nommage des fichiers notamment et des noms de colonne dans les fichiers de sortie
 Rédaction d'un README correct en markdown
 Avancement et test des possibilités de l'opérateur GnuPlot
+
+15 - 12 - 24 :
+Modulation du code C et adaptation du makefile
+Correction d'une erreur de logique dans lv minmax
+Raccord du graphique GnuPlot LV min/max

@@ -8,7 +8,6 @@ maintreatment.o: maintreatment.c maintreatment.h avl.h smartrobusnest.h structur
 	gcc -c maintreatment.c -o maintreatment.o
 execdata: smartrobusnest.o avl.o maintreatment.o
 	gcc smartrobusnest.o avl.o maintreatment.o -o execdata
-	echo "Compilation effectuée avec succès"
 
 # Compilation of the ratio part
 ratio: execratio
@@ -30,16 +29,17 @@ execdebug: smartrobusnest1.o avl1.o maintreatment1.o
 # Delete execution files
 clean:
 	rm smartrobusnest.o avl.o maintreatment.o
-	rm execdata execratio
-	echo "Nettoyage des exécutables terminé"
+	rm execdata
+
+cleanratio:
+	rm execratio
 
 # Delete execution files in debug mode
 cleandebug:
 	rm smartrobusnest1.o avl1.o maintreatment1.o
-	rm execdebug execratio
+	rm execdebug
 	echo "Nettoyage des exécutables du mode debug terminé"
 
 # Delete buffer files
 cleanfile:
 	rm -f ../tmp/*.csv
-	echo "Nettoyage des fichiers tampons terminé"

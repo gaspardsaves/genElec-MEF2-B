@@ -2,3 +2,4 @@ inputs/
 *.log
 tmp/
 outputs/
+graphs/

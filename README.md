@@ -3,9 +3,9 @@
 **Projet C-WIRE :zap:, deuxième année de pré-ingénieur CY-Tech, semestre 1 2024-2025**
 
 ## :handshake: Collaborateurs :
-**- Ibrahima Baldé-Cissé**  
-**- Jean-Luc Maslanka**  
-**- Gaspard Savès**
+**[- Ibrahima Baldé-Cissé](https://github.com/IBBC78)**  
+**[- Jean-Luc Maslanka](https://github.com/JEAN-LUC7)**  
+**[- Gaspard Savès](https://github.com/gaspardsaves)**
 
 ## Description du projet :
 [:scroll: Lire le sujet](Projet_C-Wire_preIng2_2024_2025-v1.4-1.pdf)  
@@ -25,7 +25,7 @@ Exécution du script shell : `./c-wire.sh` + paramètres
 Un petit fichier de données permettant d'utiliser le programme se trouve dans le dossier *inputs* pour l'utiliser passer `./inputs/c-wire_v00.dat` en premier argument du script. Avec ce fichier de données les temps de traitements sont de l'ordre de l'instantané.  
 Si vous utilisez la v25 (9 millions de lignes) le temps de traitement maximum sur nos machines est de l'ordre de 10 secondes.  
 
-**En fin d'exécution**
+**En fin d'exécution**  
 Un fichier `make.log` permet de constater les retours des commandes de compilation.  
 Le répertoire `outputs` contient les fichiers `.csv` générés lors de l'exécution.  
 :bar_chart: Le répertoire `graphs` contient les graphiques générés lors de l'exécution.  

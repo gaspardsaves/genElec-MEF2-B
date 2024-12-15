@@ -173,18 +173,21 @@
             if [[ "$typeCons" == "all" ]] ; then
                 outputMinmax=./outputs/${typeStation}_${typeCons}_${pwrPlantNbr}_minmax.csv
                 buffLvMinmax=./tmp/buff_${typeStation}_${typeCons}_${pwrPlantNbr}_minmax.csv
+                buffGnuPlotLvMinmax=./tmp/buff_plt_${typeStation}_${typeCons}_${pwrPlantNbr}_minmax.csv
             fi
         else
             outputFile=./outputs/${typeStation}_${typeCons}.csv
             if [[ "$typeCons" == "all" ]] ; then
                 outputMinmax=./outputs/${typeStation}_${typeCons}_minmax.csv
                 buffLvMinmax=./tmp/buff_${typeStation}_${typeCons}_minmax.csv
+                buffGnuPlotLvMinmax=./tmp/buff_plt_${typeStation}_${typeCons}_minmax.csv
             fi
         fi
         > "$outputFile"
         if [[ "$typeCons" == "all" ]] ; then
             > "$outputMinmax"
             > "$buffLvMinmax"
+            > "$buffGnuPlotLvMinmax"
         fi
 
     # Use of switch case loop
@@ -200,14 +203,15 @@
                     # Initialization of output file columns
                     echo "Station LV:Capacité:Consommation (tous)" > "$outputFile"
                     grep -E "^$pwrPlantNbr;-;[0-9-]+;[^-]+;" "$inputFile" | cut -d ";" -f4,7,8 |  tr '-' '0' | ./codeC/execdata | sort -t ":" -k2,2n >> "$outputFile"
-                    
                     if [[ "$(wc -l < "$outputFile")" -ge 21 ]] ; then
-                        #echo "___LES 10 PLUS PETITES CAPACITÉS___" > "$buffLvMinmax"
-                        tail -n +2 "$outputFile" | head -n 10 >> "$buffLvMinmax"
-                        #echo "___LES 10 PLUS GROSSES CAPACITÉS___" >> "$buffLvMinmax"
-                        tail -n 10 "$outputFile" >> "$buffLvMinmax"
-                        cat "$buffLvMinmax" | ./codeC/execratio | sort -t ":" -k4,4n | cut -d ":" -f1-4  > "$outputMinmax"
-                        # Laisser 1-4 on verra après gnuplot pour réduire à 1-3
+                        echo "Les 10 stations LV avec le plus de consommation et les 10 avec le moins" >> "$outputMinmax"
+                        echo "Tri par quantité absolue d'énergie consommée (capacité - consommation)" >> "$outputMinmax"
+                        echo "Station LV:Capacité:Consommation (tous)" >> "$outputMinmax"
+                        sort -t ":" -k3,3n "$outputFile" | tail -n +2 | head -n 10 >> "$buffGnuPlotLvMinmax"
+                        sort -t ":" -k3,3n "$outputFile" | tail -n 10 >> "$buffGnuPlotLvMinmax"
+                        cat "$buffGnuPlotLvMinmax" | ./codeC/execratio | sort -t ":" -k4,4n > "$buffLvMinmax"
+                        cut -d ":" -f1-3 "$buffLvMinmax" >> "$outputMinmax"
+                        cut -d ":" -f1,4 "$buffLvMinmax" > "$buffGnuPlotLvMinmax"
                     else
                         echo "Le réseau contient moins de 20 postes LV, il n'y aura pas de fichier $outputMinmax"
                         # Voir si on fait un tri et un graphique juste dans ce cas
@@ -259,13 +263,25 @@
 
 # Delete execution file and check if it's successful
     echo "____ CLEAN ____" >> make.log
-    echo "$(date): Suppression des exécutables" >> make.log
+    echo "$(date): Suppression des exécutables data" >> make.log
     make clean -C ./codeC >> make.log 2>&1 # Voir si on garde cette redirection globale ou juste l'erreur
     if [ $? -eq 0 ]; then
         echo "Suppression des exécutables réussie." >> make.log
     else
         echo "Echec de la suppression des exécutables. Voir les erreurs dans le fichier make.log."
         exit 116
+    fi
+
+    if [[ "$typeCons" == "all" ]] ; then
+        echo "____ CLEAN RATIO ____" >> make.log
+        echo "$(date): Suppression de l'exécutable ratio" >> make.log
+        make cleanratio -C ./codeC >> make.log 2>&1
+        if [ $? -eq 0 ]; then
+            echo "Suppression de l'exécutable ratio réussie" >> make.log
+        else
+            echo "Echec de suppression de l'exécutable ratio. Voir erreurs dans le fichier make.log."
+            exit 117
+        fi
     fi
 
 # Delete buffer file and check if it's successful
@@ -276,7 +292,7 @@
         #echo "Suppression des fichiers tampons réussie" >> make.log
     #else
         #echo "Echec de suppression des fichiers tampons. Voir erreurs dans le fichier make.log."
-        #exit 117
+        #exit 118
     #fi
 
 # Confirm end of the treatment
