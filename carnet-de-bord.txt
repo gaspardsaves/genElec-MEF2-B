@@ -69,6 +69,7 @@ Implémentation du temps dans le script shell et réglage de petits détails par
 12 - 12 - 24 :
 Amélioration significative de la compléxité et débug script et grep.
 Implémentation de lv minmax
+Travail sur la contrainte d'alignement de la structure pour minimiser le temps de traitement.
 Réalisation d'une fonction unique assurant le nommage des fichiers
 Ibrahima se charge des tests de l'utilitaire GnuPlot pour préparer son implémentation dans le projet
 
@@ -81,3 +82,6 @@ Avancement et test des possibilités de l'opérateur GnuPlot
 Modulation du code C et adaptation du makefile
 Correction d'une erreur de logique dans lv minmax
 Raccord du graphique GnuPlot LV min/max
+
+16 - 12 - 24 :
+Correction de la logique lv minmax tout est désormais fonctionnel.

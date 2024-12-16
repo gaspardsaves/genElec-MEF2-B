@@ -1,5 +1,34 @@
 # Save
 
+    'lv' )
+        # LV data
+        # Read every line (except the first (categories)) of the input file
+        # Check if it's a LV (column 4 and 7 not empty (different of '-'))
+        # Add columns 4, 7 and 8 in the lv buffer file
+        case "$typeCons" in
+            'all' )
+                # All consumers data
+                # Initialization of output file columns
+                echo "Station LV:Capacité:Consommation (tous)" > "$outputFile"
+                grep -E "^$pwrPlantNbr;-;[0-9-]+;[^-]+;" "$inputFile" | cut -d ";" -f4,7,8 |  tr '-' '0' | ./codeC/execdata | sort -t ":" -k2,2n >> "$outputFile"
+                if [[ "$(wc -l < "$outputFile")" -ge 21 ]] ; then
+                    echo "Les 10 stations LV avec le plus de consommation et les 10 avec le moins" >> "$outputMinmax"
+                    echo "Tri par quantité absolue d'énergie consommée (capacité - consommation)" >> "$outputMinmax"
+                    echo "Station LV:Capacité:Consommation (tous)" >> "$outputMinmax"
+                    sort -t ":" -k3,3n "$outputFile" | tail -n +2 | head -n 10 >> "$buffGnuPlotLvMinmax"
+                    sort -t ":" -k3,3n "$outputFile" | tail -n 10 >> "$buffGnuPlotLvMinmax"
+                    cat "$buffGnuPlotLvMinmax" | ./codeC/execratio | sort -t ":" -k4,4n > "$buffLvMinmax"
+                    cut -d ":" -f1-3 "$buffLvMinmax" >> "$outputMinmax"
+                    awk '{print NR ":" $0}' "$buffLvMinmax" | cut -d ":" -f1,2,5 > "$buffGnuPlotLvMinmax"
+                    generateGraphs "$buffGnuPlotLvMinmax"
+                else
+                    echo "Le réseau contient moins de 20 postes LV, il n'y aura pas de fichier $outputMinmax"
+                    # Voir si on fait un tri et un graphique juste dans ce cas
+                    rm "$buffLvMinmax"
+                    rm "$outputMinmax"
+                fi
+            ;;
+
 case "$typeCons" in
     'all' )
         # All consumers data

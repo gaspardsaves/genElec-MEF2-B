@@ -7,7 +7,7 @@
         gnuplot <<EOF
             # Histogram image generation
             set terminal pngcairo size 1000,600 enhanced font "Arial,12"
-            set output "./graphs/lv_all_minmax.png"
+            set output "$graphLvMinmax"
 
             # Display management
             set style fill solid 0.8 border -1
@@ -210,6 +210,7 @@ EOF
                 outputMinmax=./outputs/${typeStation}_${typeCons}_${pwrPlantNbr}_minmax.csv
                 buffLvMinmax=./tmp/buff_${typeStation}_${typeCons}_${pwrPlantNbr}_minmax.csv
                 buffGnuPlotLvMinmax=./tmp/buff_plt_${typeStation}_${typeCons}_${pwrPlantNbr}_minmax.csv
+                graphLvMinmax=./graphs/${typeStation}_${typeCons}_${pwrPlantNbr}_minmax.png
             fi
         else
             outputFile=./outputs/${typeStation}_${typeCons}.csv
@@ -217,6 +218,7 @@ EOF
                 outputMinmax=./outputs/${typeStation}_${typeCons}_minmax.csv
                 buffLvMinmax=./tmp/buff_${typeStation}_${typeCons}_minmax.csv
                 buffGnuPlotLvMinmax=./tmp/buff_plt_${typeStation}_${typeCons}_minmax.csv
+                graphLvMinmax=./graphs/${typeStation}_${typeCons}_minmax.png
             fi
         fi
         > "$outputFile"
@@ -240,20 +242,33 @@ EOF
                     echo "Station LV:Capacité:Consommation (tous)" > "$outputFile"
                     grep -E "^$pwrPlantNbr;-;[0-9-]+;[^-]+;" "$inputFile" | cut -d ";" -f4,7,8 |  tr '-' '0' | ./codeC/execdata | sort -t ":" -k2,2n >> "$outputFile"
                     if [[ "$(wc -l < "$outputFile")" -ge 21 ]] ; then
-                        echo "Les 10 stations LV avec le plus de consommation et les 10 avec le moins" >> "$outputMinmax"
                         echo "Tri par quantité absolue d'énergie consommée (capacité - consommation)" >> "$outputMinmax"
+                        echo "Les 10 stations LV avec la plus forte sous-consommation et les 10 avec la plus forte surconsommation" >> "$outputMinmax"
                         echo "Station LV:Capacité:Consommation (tous)" >> "$outputMinmax"
-                        sort -t ":" -k3,3n "$outputFile" | tail -n +2 | head -n 10 >> "$buffGnuPlotLvMinmax"
-                        sort -t ":" -k3,3n "$outputFile" | tail -n 10 >> "$buffGnuPlotLvMinmax"
-                        cat "$buffGnuPlotLvMinmax" | ./codeC/execratio | sort -t ":" -k4,4n > "$buffLvMinmax"
+                        tail -n +2 "$outputFile" | ./codeC/execratio | sort -t ":" -k4,4n > "$buffGnuPlotLvMinmax"
+                        head -n 10 "$buffGnuPlotLvMinmax" >> "$buffLvMinmax"
+                        tail -n 10 "$buffGnuPlotLvMinmax" >> "$buffLvMinmax"
                         cut -d ":" -f1-3 "$buffLvMinmax" >> "$outputMinmax"
                         awk '{print NR ":" $0}' "$buffLvMinmax" | cut -d ":" -f1,2,5 > "$buffGnuPlotLvMinmax"
                         generateGraphs "$buffGnuPlotLvMinmax"
+                        if [ $? -eq 0 ]; then
+                            echo "Construction du graphique réussie."
+                        else
+                            echo "Erreur de génération du graphique."
+                            #exit 116
+                        fi
                     else
                         echo "Le réseau contient moins de 20 postes LV, il n'y aura pas de fichier $outputMinmax"
-                        # Voir si on fait un tri et un graphique juste dans ce cas
-                        rm "$buffLvMinmax"
                         rm "$outputMinmax"
+                        tail -n +2 "$outputFile" | ./codeC/execratio | sort -t ":" -k4,4n > "$buffLvMinmax"
+                        awk '{print NR ":" $0}' "$buffLvMinmax" | cut -d ":" -f1,2,5 > "$buffGnuPlotLvMinmax"
+                        generateGraphs "$buffGnuPlotLvMinmax"
+                        if [ $? -eq 0 ]; then
+                            echo "Construction du graphique réussie."
+                        else
+                            echo "Erreur de génération du graphique."
+                            #exit 117
+                        fi
                     fi
                 ;;
                 'comp' )
@@ -306,7 +321,7 @@ EOF
         echo "Suppression des exécutables réussie." >> make.log
     else
         echo "Echec de la suppression des exécutables. Voir les erreurs dans le fichier make.log."
-        exit 116
+        exit 118
     fi
 
     if [[ "$typeCons" == "all" ]] ; then
@@ -317,7 +332,7 @@ EOF
             echo "Suppression de l'exécutable ratio réussie" >> make.log
         else
             echo "Echec de suppression de l'exécutable ratio. Voir erreurs dans le fichier make.log."
-            exit 117
+            exit 119
         fi
     fi
 
@@ -329,7 +344,7 @@ EOF
         #echo "Suppression des fichiers tampons réussie" >> make.log
     #else
         #echo "Echec de suppression des fichiers tampons. Voir erreurs dans le fichier make.log."
-        #exit 118
+        #exit 120
     #fi
 
 # Confirm end of the treatment
