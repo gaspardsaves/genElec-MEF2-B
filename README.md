@@ -23,7 +23,7 @@ Vérifier la possession des droits d'exécution sur le script shell si ce n'est 
 Exécution du script shell : `./c-wire.sh` + paramètres  
 --> Pour avoir le détail des paramétres possibles du script : possibilité d'utiliser l'option `-h` ou `--help` commandes `./c-wire.sh -h` ou `./c-wire.sh --help` afin d'afficher l'aide  
 Un petit fichier de données permettant d'utiliser le programme se trouve dans le dossier *inputs* pour l'utiliser passer `./inputs/c-wire_v00.dat` en premier argument du script. Avec ce fichier de données, peu importe les paramètres choisis, les temps de traitements sont de l'ordre de l'instantané.  
-Si vous utilisez la v25 (9 millions de lignes) le temps de traitement maximum sur nos machines pour `lv all` est de l'ordre de 11 secondes.  
+Si vous utilisez la v25 (9 millions de lignes) le temps de traitement maximum, sur nos machines, pour `lv all` est de l'ordre de 12 secondes et 10 secondes sur les machines de l'école.  
 
 **En fin d'exécution**  
 Un fichier `make.log` permet de constater les retours des commandes de compilation.  

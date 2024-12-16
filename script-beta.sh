@@ -1,5 +1,41 @@
 # Save
 
+# Graphs generation function
+    generateGraphs () {
+        # Necessité de réaliser un passage d'argument avec des fichiers d'entrée et de sortie pour être générique
+        # Manque la vérification du retour
+        gnuplot <<EOF
+            # Histogram image generation
+            set terminal pngcairo size 1000,600 enhanced font "Arial,12"
+            set output "$graphLvMinmax"
+
+            # Display management
+            set style fill solid 0.8 border -1
+            set style line 1 lc rgb "red"
+            set style line 2 lc rgb "green"
+            set boxwidth 0.9
+            set grid
+
+            # Title and legend management
+            set xlabel 'Identifiant du poste'
+            set ylabel 'Charge nette (capacité - consommation)'
+            set title 'Histogramme de charge des postes LV ayant la plus forte et la plus faible consommation'
+            set xtics rotate by -45 font "Arial,10"
+
+            # Clarification on reading the .csv file
+            set datafile separator ":"
+            set key autotitle columnhead
+
+            #set palette model RGB defined (0 'red', 1 'green')
+
+            # Complete graphic creation with conditions on selected colors
+            plot '$buffGnuPlotLvMinmax' using 1:3:(\$3 < 0 ? 1 : 2):xtic(2) with boxes lc variable notitle
+            #plot '$buffGnuPlotLvMinmax' using 1:3:(\$3 < 0 ? 0 : 1):xtic(2) with boxes lc variable notitle
+            #plot '$buffGnuPlotLvMinmax' using 1:3:(\$3 < 0 ? 'red' : 'green'):xtic(2) with boxes lc variable notitle
+            # plot '$buffGnuPlotLvMinmax' using 1:3:((\$3 < 0) ? 1 : 2) with boxes lc rgb 'red' notitle, '$buffGnuPlotLvMinmax' using 1:3:((\$3 > 0) ? 1 : 2) with boxes lc rgb 'green' notitle
+EOF
+    }
+
     'lv' )
         # LV data
         # Read every line (except the first (categories)) of the input file
@@ -22,11 +58,19 @@
                     awk '{print NR ":" $0}' "$buffLvMinmax" | cut -d ":" -f1,2,5 > "$buffGnuPlotLvMinmax"
                     generateGraphs "$buffGnuPlotLvMinmax"
                 else
-                    echo "Le réseau contient moins de 20 postes LV, il n'y aura pas de fichier $outputMinmax"
-                    # Voir si on fait un tri et un graphique juste dans ce cas
-                    rm "$buffLvMinmax"
-                    rm "$outputMinmax"
-                fi
+                        echo "Le réseau contient moins de 20 postes LV, il n'y aura pas de fichier $outputMinmax"
+                        rm "$outputMinmax"
+                        tail -n +2 "$outputFile" | ./codeC/execratio | sort -t ":" -k4,4n > "$buffLvMinmax"
+                        awk '{print NR ":" $0}' "$buffLvMinmax" | cut -d ":" -f1,2,5 > "$buffGnuPlotLvMinmax"
+                        gnuplot -e "dataFile='${buffGnuPlotLvMinmax}'; graphOutput='${graphLvMinmax}'" script-gnuplot-lv.plt
+                        #generateGraphs "$buffGnuPlotLvMinmax"
+                        if [ $? -eq 0 ]; then
+                            echo "Construction du graphique réussie."
+                        else
+                            echo "Erreur de génération du graphique."
+                            #exit 117
+                        fi
+                    fi
             ;;
 
 case "$typeCons" in
