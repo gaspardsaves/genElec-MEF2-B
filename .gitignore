@@ -1,5 +1,5 @@
-inputs/
+inputs/*.dat
 *.log
-tmp/
-outputs/
-graphs/
+tmp/*.csv
+outputs/*.csv
+graphs/*.png

@@ -1,3 +1,45 @@
+# Graphs generation function
+
+# Histogram image generation
+    set terminal pngcairo size 1000,600 enhanced font "Arial,12"
+    set output graphOutput
+
+# Display management
+    set style fill solid 0.8 border -1
+    #set style line 1 lc rgb "red"
+    #set style line 2 lc rgb "green"
+    set boxwidth 0.9
+    set grid
+
+# Title and legend management
+    set xlabel 'Identifiant du poste'
+    set ylabel 'Capacité théorique (bleu) et surconsommation (rouge)'
+    set title 'Histogramme de charge des postes LV les plus chargés'
+    set xtics rotate by -45 font "Arial,10"
+
+# Clarification on reading the .csv file
+    set datafile separator ":"
+    set key autotitle columnhead
+
+# Complete graphic creation with conditions on selected colors
+    plot dataFile using 3:xtic(1) with boxes title "Surconsommation" lc rgb "red", \
+     '' using 2:xtic(1) with boxes title "Capacité théorique du poste" lc rgb "blue"
+    
+    #plot dataFile using (($4 > 0) ? ($2 > $3 ? $2 : 0) : NaN):xtic(1) with boxes title "Sous-consommation" lc rgb "green", \
+     #'' using (($4 > 0) ? $3 : 0):xtic(1) with boxes title "Capacité" lc rgb "blue", \
+     #'' using (($4 <= 0) ? $2 : 0):xtic(1) with boxes title "Capacité" lc rgb "blue", \
+     #'' using (($4 <= 0) ? ($2 >= $3 ? $2 : 0) : NaN):xtic(1) with boxes title "Surconsommation" lc rgb "red"
+
+    #plot dataFile using ($2 > $3 ? $2 : 0):xtic(1) with boxes title "Sous-consommation" lc rgb "green", \
+     #'' using ($3 > $2 ? $3 : 0):xtic(1) with boxes title "Surconsommation" lc rgb "red", \
+     #'' using ($2 >= $3 ? $2 : 0):xtic(1) with boxes title "Capacité" lc rgb "grey"
+    #plot dataFile using 1:3:($3 < 0 ? 1 : 2):xtic(2) with boxes title 'Consommation normale' lc rgb "green", '' using ($3 < 0 ? 1 : 2):xtic(1) with boxes title 'Surconsommation' lc rgb "red"
+    #plot dataFile using ($3 > $2 ? $2 : $3):xtic(2) with boxes title 'Capacité' lc rgb "grey", '' using ($3 > $2 ? $3-$2 : 0):xtic(1) with boxes title 'Surconsommation' lc rgb "red", '' using ($3 > $2 ? $3-$2 : 0):xtic(1) with boxes title 'Sous-consommation' lc rgb "green"
+    #plot dataFile using 1:3:($3 < 0 ? 1 : 2):xtic(2) with boxes lc variable notitle
+    #plot graphOutput using 1:3:($3 < 0 ? 0 : 1):xtic(2) with boxes lc variable notitle
+    #plot graphOutput using 1:3:($3 < 0 ? 'red' : 'green'):xtic(2) with boxes lc variable notitle
+    # plot graphOutput using 1:3:(($3 < 0) ? 1 : 2) with boxes lc rgb 'red' notitle, dataFile using 1:3:((\$3 > 0) ? 1 : 2) with boxes lc rgb 'green' notitle
+
 # Histogram image generation
 set terminal pngcairo size 1000,600
 set output "./graphs/lv_all_minmax.png"

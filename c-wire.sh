@@ -173,24 +173,30 @@
             if [[ "$typeCons" == "all" ]] ; then
                 outputMinmax=./outputs/${typeStation}_${typeCons}_${pwrPlantNbr}_minmax.csv
                 buffLvMinmax=./tmp/buff_${typeStation}_${typeCons}_${pwrPlantNbr}_minmax.csv
-                buffGnuPlotLvMinmax=./tmp/buff_plt_${typeStation}_${typeCons}_${pwrPlantNbr}_minmax.csv
-                graphLvMinmax=./graphs/${typeStation}_${typeCons}_${pwrPlantNbr}_minmax.png
+                buffGnuPlotLvMinmaxNeg=./tmp/buff_plt_${typeStation}_${typeCons}_${pwrPlantNbr}_minmax_neg.csv
+                buffGnuPlotLvMinmaxPos=./tmp/buff_plt_${typeStation}_${typeCons}_${pwrPlantNbr}_minmax_pos.csv
+                graphLvMinmaxNeg=./graphs/${typeStation}_${typeCons}_${pwrPlantNbr}_minmax_neg.png
+                graphLvMinmaxPos=./graphs/${typeStation}_${typeCons}_${pwrPlantNbr}_minmax_pos.png
             fi
         else
             outputFile=./outputs/${typeStation}_${typeCons}.csv
             if [[ "$typeCons" == "all" ]] ; then
                 outputMinmax=./outputs/${typeStation}_${typeCons}_minmax.csv
                 buffLvMinmax=./tmp/buff_${typeStation}_${typeCons}_minmax.csv
-                buffGnuPlotLvMinmax=./tmp/buff_plt_${typeStation}_${typeCons}_minmax.csv
-                graphLvMinmax=./graphs/${typeStation}_${typeCons}_minmax.png
+                buffGnuPlotLvMinmaxNeg=./tmp/buff_plt_${typeStation}_${typeCons}_minmax_neg.csv
+                buffGnuPlotLvMinmaxPos=./tmp/buff_plt_${typeStation}_${typeCons}_minmax_pos.csv
+                graphLvMinmaxNeg=./graphs/${typeStation}_${typeCons}_minmax_neg.png
+                graphLvMinmaxPos=./graphs/${typeStation}_${typeCons}_minmax_pos.png
             fi
         fi
         > "$outputFile"
         if [[ "$typeCons" == "all" ]] ; then
             > "$outputMinmax"
             > "$buffLvMinmax"
-            > "$buffGnuPlotLvMinmax"
-            > "$graphLvMinmax"
+            > "$buffGnuPlotLvMinmaxNeg"
+            > "$buffGnuPlotLvMinmaxPos"
+            > "$graphLvMinmaxNeg"
+            > "$graphLvMinmaxPos"
         fi
 
     # Use of switch case loop
@@ -210,30 +216,30 @@
                         echo "Tri par quantité absolue d'énergie consommée (capacité - consommation)" >> "$outputMinmax"
                         echo "Les 10 stations LV avec la plus forte sous-consommation et les 10 avec la plus forte surconsommation" >> "$outputMinmax"
                         echo "Station LV:Capacité:Consommation (tous)" >> "$outputMinmax"
-                        tail -n +2 "$outputFile" | ./codeC/execratio | sort -t ":" -k4,4n > "$buffGnuPlotLvMinmax"
-                        head -n 10 "$buffGnuPlotLvMinmax" >> "$buffLvMinmax"
-                        tail -n 10 "$buffGnuPlotLvMinmax" >> "$buffLvMinmax"
+                        tail -n +2 "$outputFile" | ./codeC/execratio | sort -t ":" -k4,4n > "$buffGnuPlotLvMinmaxNeg"
+                        head -n 10 "$buffGnuPlotLvMinmaxNeg" >> "$buffLvMinmax"
+                        tail -n 10 "$buffGnuPlotLvMinmaxNeg" >> "$buffLvMinmax"
                         cut -d ":" -f1-3 "$buffLvMinmax" >> "$outputMinmax"
-                        awk '{print NR ":" $0}' "$buffLvMinmax" | cut -d ":" -f1,2,5 > "$buffGnuPlotLvMinmax"
-                        gnuplot -e "dataFile='${buffGnuPlotLvMinmax}'; graphOutput='${graphLvMinmax}'" script-gnuplot-lv.plt
-                        if [ $? -eq 0 ]; then
-                            echo "Construction du graphique réussie."
-                        else
-                            echo "Erreur de génération du graphique."
-                            #exit 116
-                        fi
+                        awk -F ":" '$4 < 0' "$buffLvMinmax" | cut -d ":" -f1-3 | sort -t ":" -k2,2n > "$buffGnuPlotLvMinmaxNeg"
+                        awk -F ":" '$4 >= 0' "$buffLvMinmax" | cut -d ":" -f1-3 | sort -t ":" -k3,3n > "$buffGnuPlotLvMinmaxPos"
                     else
                         echo "Le réseau contient moins de 20 postes LV, il n'y aura pas de fichier $outputMinmax"
                         rm "$outputMinmax"
                         tail -n +2 "$outputFile" | ./codeC/execratio | sort -t ":" -k4,4n > "$buffLvMinmax"
-                        awk '{print NR ":" $0}' "$buffLvMinmax" | cut -d ":" -f1,2,5 > "$buffGnuPlotLvMinmax"
-                        gnuplot -e "dataFile='${buffGnuPlotLvMinmax}'; graphOutput='${graphLvMinmax}'" script-gnuplot-lv.plt
-                        if [ $? -eq 0 ]; then
-                            echo "Construction du graphique réussie."
-                        else
-                            echo "Erreur de génération du graphique."
-                            #exit 117
-                        fi
+                        awk -F ":" '$4 < 0' "$buffLvMinmax" | cut -d ":" -f1-3 | sort -t ":" -k2,2n > "$buffGnuPlotLvMinmaxNeg"
+                        awk -F ":" '$4 >= 0' "$buffLvMinmax" | cut -d ":" -f1-3 | sort -t ":" -k3,3n > "$buffGnuPlotLvMinmaxPos"
+                    fi
+                    gnuplot -e "dataFile='${buffGnuPlotLvMinmaxNeg}'; graphOutput='${graphLvMinmaxNeg}'" script-gnuplot-lv-neg.plt
+                    if [ $? -eq 0 ]; then
+                        echo "Construction du graphique des postes les plus chargés réussie."
+                    else
+                        echo "Erreur de génération du graphique des postes les plus chargés."
+                    fi
+                    gnuplot -e "dataFile='${buffGnuPlotLvMinmaxPos}'; graphOutput='${graphLvMinmaxPos}'" script-gnuplot-lv-pos.plt
+                    if [ $? -eq 0 ]; then
+                        echo "Construction du graphique des postes les moins chargés réussie."
+                    else
+                        echo "Erreur de génération du graphique des postes les moins chargés."
                     fi
                 ;;
                 'comp' )

@@ -1,5 +1,44 @@
 # Save
 
+            case "$typeCons" in
+                'all' )
+                    # All consumers data
+                    # Initialization of output file columns
+                    echo "Station LV:Capacité:Consommation (tous)" > "$outputFile"
+                    grep -E "^$pwrPlantNbr;-;[0-9-]+;[^-]+;" "$inputFile" | cut -d ";" -f4,7,8 |  tr '-' '0' | ./codeC/execdata | sort -t ":" -k2,2n >> "$outputFile"
+                    if [[ "$(wc -l < "$outputFile")" -ge 21 ]] ; then
+                        echo "Tri par quantité absolue d'énergie consommée (capacité - consommation)" >> "$outputMinmax"
+                        echo "Les 10 stations LV avec la plus forte sous-consommation et les 10 avec la plus forte surconsommation" >> "$outputMinmax"
+                        echo "Station LV:Capacité:Consommation (tous)" >> "$outputMinmax"
+                        tail -n +2 "$outputFile" | ./codeC/execratio | sort -t ":" -k4,4n > "$buffGnuPlotLvMinmaxNeg"
+                        head -n 10 "$buffGnuPlotLvMinmaxNeg" >> "$buffLvMinmax"
+                        tail -n 10 "$buffGnuPlotLvMinmaxNeg" >> "$buffLvMinmax"
+                        cut -d ":" -f1-3 "$buffLvMinmax" >> "$outputMinmax"
+                        awk -F ":" '$4 < 0' "$buffLvMinmax" | cut -d ":" -f1-3 | sort -t ":" -k2,2n > "$buffGnuPlotLvMinmaxNeg"
+                        awk -F ":" '$4 >= 0' "$buffLvMinmax" | cut -d ":" -f1-3 | sort -t ":" -k3,3n > "$buffGnuPlotLvMinmaxPos"
+                        #awk '{print NR ":" $0}' "$buffLvMinmax" | cut -d ":" -f1,2,5 > "$buffGnuPlotLvMinmax"
+                    else
+                        echo "Le réseau contient moins de 20 postes LV, il n'y aura pas de fichier $outputMinmax"
+                        rm "$outputMinmax"
+                        tail -n +2 "$outputFile" | ./codeC/execratio | sort -t ":" -k4,4n > "$buffLvMinmax"
+                        #awk '{print NR ":" $0}' "$buffLvMinmax" | cut -d ":" -f1,2,5 > "$buffGnuPlotLvMinmax"
+                        awk -F ":" '$4 < 0' "$buffLvMinmax" | cut -d ":" -f1-3 | sort -t ":" -k2,2n > "$buffGnuPlotLvMinmaxNeg"
+                        awk -F ":" '$4 >= 0' "$buffLvMinmax" | cut -d ":" -f1-3 | sort -t ":" -k3,3n > "$buffGnuPlotLvMinmaxPos"
+                    fi
+                    gnuplot -e "dataFile='${buffGnuPlotLvMinmaxNeg}'; graphOutput='${graphLvMinmaxNeg}'" script-gnuplot-lv-neg.plt
+                    if [ $? -eq 0 ]; then
+                        echo "Construction du graphique des postes les plus chargés réussie."
+                    else
+                        echo "Erreur de génération du graphique des postes les plus chargés."
+                    fi
+                    gnuplot -e "dataFile='${buffGnuPlotLvMinmaxPos}'; graphOutput='${graphLvMinmaxPos}'" script-gnuplot-lv-pos.plt
+                    if [ $? -eq 0 ]; then
+                        echo "Construction du graphique des postes les moins chargés réussie."
+                    else
+                        echo "Erreur de génération du graphique des postes les moins chargés."
+                    fi
+                ;;
+
 # Graphs generation function
     generateGraphs () {
         # Necessité de réaliser un passage d'argument avec des fichiers d'entrée et de sortie pour être générique
