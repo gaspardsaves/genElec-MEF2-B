@@ -9,7 +9,7 @@
 
 ## Description du projet :
 [:scroll: Lire le sujet et le cahier des charges du projet](Projet_C-Wire_preIng2_2024_2025-v1.4-1.pdf)  
-[:memo: Lire le rapport de réalisation du projet](rapport-projet-c-wire-mef2-b.pdf)  
+[:ledger: Lire le rapport de réalisation du projet](rapport-projet-c-wire-mef2-b.pdf)  
 [:memo: Lire le carnet de bord des collaborateurs](carnet-de-bord.txt)  
 
 Ce projet réalise un traitement ciblé des données d'un réseau de transport d'électricité.  
@@ -40,7 +40,7 @@ Le répertoire `outputs` contient les fichiers `.csv` générés lors de l'exéc
 - Le répertoire `graphs` contient, après exécution, les histogrammes générés par le programme  
 - Le répertoire `inputs` contient le petit fichier de démonstration (v00) vous pouvez y copier votre fichier de données  
 - Le répertoire `outputs` contient, après exécution, les fichiers `.csv` générés par le programme  
-- Le répertoire `tests` contient des exemples de fichiers et histogrammes de sortie pour la v00 et la v25 (Voir le [rapport de réalisation du projet](rapport-projet-c-wire-mef2-b.pdf) pour plus de détails)  
+- Le répertoire `tests` contient des exemples de fichiers et histogrammes de sortie pour la v00 et la v25 (Voir le [rapport de projet](rapport-projet-c-wire-mef2-b.pdf) pour plus de détails)  
 - Le répertoire `tmp` contient, pendant l'exécution, les éventuels fichiers tampons générés  
 
 ### A la racine : 
@@ -53,7 +53,7 @@ Le répertoire `outputs` contient les fichiers `.csv` générés lors de l'exéc
 `script-gnuplot-lv-neg.plt` est le script gnuplot permettant la génération de l'histogramme des postes LV en surcharge  
 `script-gnuplot-lv-pos.plt` est le script gnuplot permettant la génération de l'histogramme des postes LV en sous-charge  
 
-## :hammer Makefile / Compilation :
+## :hammer: Makefile / Compilation :
 Si vous souhaitez compiler et gérer le code C séparément cela est possible en utilisant les commandes :  
 `make -C ./codeC`  l'exécutable principal s'appelle alors `execdata`  
 `make ratio -C ./codeC` le deuxième exécutable s'appelle alors `execratio` (utile pour `lv all`)   

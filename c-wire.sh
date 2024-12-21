@@ -326,13 +326,13 @@
 # Delete buffer file(s) and check if it's successful
     echo "____ CLEANFILE____" >> make.log
     echo "$(date): Suppression des fichiers tampons" >> make.log
-    #make cleanfile -C ./codeC >> make.log 2>&1
-    #if [ $? -eq 0 ]; then
-        #echo "Suppression des fichiers tampons réussie" >> make.log
-    #else
-        #echo "Echec de suppression des fichiers tampons. Voir erreurs dans le fichier make.log."
-        #exit 118
-    #fi
+    make cleanfile -C ./codeC >> make.log 2>&1
+    if [ $? -eq 0 ]; then
+        echo "Suppression des fichiers tampons réussie" >> make.log
+    else
+        echo "Echec de suppression des fichiers tampons. Voir erreurs dans le fichier make.log."
+        exit 118
+    fi
 
 # Confirm end of the treatment
     echo "Traitement terminé. Les résultats sont dans le fichier du dossier 'outputs' et les graphiques éventuels sont dans 'graphs'."
