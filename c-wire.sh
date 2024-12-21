@@ -254,9 +254,10 @@
                         echo "Erreur de génération du graphique des postes les moins chargés."
                     fi
                     # Generate pdf document with histograms and check if it's successful
-                    pdflatex text.tex
+                    pdflatex -output-directory=latex '\def\imageunderload{'$graphLvMinmaxUnder'} \def\imageoverload{'$graphLvMinmaxOver'} \input{./latex/lv-pdf.tex}' > LaTeX.log 2>&1                    #pdflatex "\def\imageoverload{$IMAGE_OVERLOAD} \def\imageunderload{$} \input{document.tex}"
+                    rm -f ./latex/*.aux ./latex/*.log
                     if [ $? -eq 0 ]; then
-                        echo "PDF avec les graphiques généré avec succès : graphiques.pdf"
+                        echo "PDF avec les graphiques généré avec succès."
                     else
                         echo "Erreur lors de la génération du fichier PDF."
                         exit 119

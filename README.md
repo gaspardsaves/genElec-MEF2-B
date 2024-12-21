@@ -20,12 +20,12 @@ Après passage en entrée des données d'un réseau de transport d'électricité
 - Installation de l'utilitaire gnuplot pour la réalisation des histogrammes  
 `gnuplot --version` pour vérifier s'il est installé sur votre machine  
 Son installation est facultative mais sans lui vous ne pourrez pas tester l'ensemble des fonctionnalités.  
---> S'il n'est pas installé l'exécution du script se fera correctement et un message vous annoncera que les histogrammes n'ont pas pu être réalisé mais les fichiers csv de sortie auront été générés correctement.
+➔ S'il n'est pas installé l'exécution du script se fera correctement et un message vous annoncera que les histogrammes n'ont pas pu être réalisé mais les fichiers csv de sortie auront été générés correctement.
 
 ## Exécution globale du projet :
 Vérifier la possession des droits d'exécution sur le script shell si ce n'est pas le cas : `chmod +x c-wire.sh`  
 Exécution du script shell : `./c-wire.sh` + paramètres  
---> Pour avoir le détail des paramétres possibles du script : possibilité d'utiliser l'option `-h` ou `--help` (commandes `./c-wire.sh -h` ou `./c-wire.sh --help` afin d'afficher l'aide)  
+➔ Pour avoir le détail des paramétres possibles du script : possibilité d'utiliser l'option `-h` ou `--help` (commandes `./c-wire.sh -h` ou `./c-wire.sh --help` afin d'afficher l'aide)  
 Un petit fichier de données permettant d'utiliser le programme se trouve dans le dossier *inputs* pour l'utiliser passer `./inputs/c-wire_v00.dat` en premier argument du script. Avec ce fichier de données, peu importe les paramètres choisis, les temps de traitements sont de l'ordre de l'instantané.  
 Si vous utilisez la v25 (9 millions de lignes) le temps de traitement maximum pour `lv all` avec la génération des graphiques est de l'ordre de 12 secondes sur nos machines comme sur les machines de l'école.  
 
