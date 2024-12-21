@@ -253,6 +253,14 @@
                     else
                         echo "Erreur de génération du graphique des postes les moins chargés."
                     fi
+                    # Generate pdf document with histograms and check if it's successful
+                    pdflatex text.tex
+                    if [ $? -eq 0 ]; then
+                        echo "PDF avec les graphiques généré avec succès : graphiques.pdf"
+                    else
+                        echo "Erreur lors de la génération du fichier PDF."
+                        exit 119
+                    fi
                 ;;
                 'comp' )
                     # Company consumer data
