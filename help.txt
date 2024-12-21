@@ -1,3 +1,7 @@
+N.B. :
+    - Veillez à toujours fournir les arguments obligatoires dans l'ordre spécifié.
+    - En cas de combinaison d’arguments invalide ou de problème avec les valeurs des arguments, le script affichera un message d’erreur explicatif ainsi que ce message d'aide.
+
 Arguments :
 
     Le script shell prend au minimum 3 arguments.
@@ -7,16 +11,16 @@ Arguments :
         Peut être spécifié sous forme :
             Absolue  : /chemin/vers/fichier/depuis/mon/home
             Relative : ./chemin/vers/fichier/depuis/mon/repertoire/actuel
-        Pour utiliser le fichier de base qui était fourni : ./inputs/c-wire_v25.dat
+        Pour utiliser le petit fichier (v00) présent dans le dépot : ./inputs/c-wire_v00.dat
 
     Argument 2 : Type de station
-        Définit la catégorie de station concernée. Les valeurs possibles sont :
+        Définit la catégorie de poste électrique concernée. Les valeurs possibles sont :
             hvb : High-voltage B
             hva : High-voltage A
             lv  : Low-voltage
 
     Argument 3 : Type de consommateur
-        Définit le type de consommateurs ciblés. Les valeurs possibles sont :
+        Définit le type de consommateurs ciblé. Les valeurs possibles sont :
             comp  : Entreprises
             indiv : Particuliers
             all   : Tous les consommateurs
@@ -24,7 +28,7 @@ Arguments :
     Combinaisons valides pour les arguments 2 et 3 :
         hvb comp : Consommateurs entreprises branchés sur HV-B
         hva comp : Consommateurs entreprises branchés sur HV-A
-        lv all   : Tout les consommateurs branchés sur LV
+        lv all   : Tous les consommateurs branchés sur LV
         lv indiv : Consommateurs particuliers branchés sur LV
         lv comp  : Consommateurs entreprises branchés sur LV
 
@@ -32,27 +36,66 @@ Arguments :
 
     Argument 4 (optionnel) : Numéro de centrale
         Permet de filtrer les données en fonction d’une centrale spécifique.
-        Doit être un entier compris entre 1 et 5 inclus.
-        Applicable pour tout les types de station.
+            - Doit être un entier compris entre 1 et 5 inclus (nombre maximum de centrales de la v25).
+            - Applicable pour tout les types de station.
         Si cet argument est fourni, seuls les HV-B, HV-A ou LV approvisionnés par la centrale spécifiée seront traités.
 
-    Argument d’aide (optionnel) : Afficher le message d’aide
+    Argument d’aide (optionnel) : Permet d'afficher le message d’aide
         Utilisez les options suivantes, quel que soit leur position dans la liste des arguments :
-            -h
-            --help
+            '-h'
+            '--help'
         Si une de ces options est spécifiée, le script affichera ce message d’aide et ignorera les autres arguments.
 
-Exemples :    
+Exemples de commandes valides pour l'exécution :    
     Exemple avec tous les arguments obligatoires :
-        ./script.sh ./inputs/c-wire_v25.dat hvb comp
+        ./c-wire.sh ./inputs/c-wire_v00.dat hvb comp
 
     Exemple avec l'argument optionnel :
-        ./script.sh ./inputs/c-wire_v25.dat lv all 3
+        ./c-wire.sh ./inputs/c-wire_v00.dat lv all 3
 
     Affichage de l'aide :
-        ./script.sh -h
-        ./script.sh --help
+        ./c-wire.sh -h
+        ./c-wire.sh --help
 
-Notes :
-    - Veillez à toujours fournir les arguments obligatoires dans l'ordre spécifié.
-    - En cas de combinaison d’arguments invalide ou de problème avec les valeurs des arguments, le script affichera un message d’erreur explicatif.
+Index des codes d'erreurs de sortie et solutions éventuelles :
+    Code d'erreur du C :
+        1 : Pointeur NULL
+        ➔ Vérification des allocations mémoire et débug à faire. Possibilité d'utiliser le mode debug (cf. README).
+
+    Codes d'erreur du script shell :
+        101 : Échec du nettoyage d'un répertoire ('tmp', 'graphs' ou 'outputs')
+            ➔ Vérifiez si vous n'avez pas des fichiers protégés dans ces répertoires. Supprimez-les manuellement ou modifiez leurs permissions.
+        102 : Droits d'écriture manquants sur un répertoire ('tmp', 'graphs' ou 'outputs').
+            ➔ Corrigez les permissions des répertoires en utilisant chmod.
+        103 : Échec de création d'un répertoire ('tmp', 'graphs' ou 'outputs').
+            ➔ Vérifiez vos permissions sur le répertoire parent et réessayez.
+        104 : Option d'aide détectée ('-h' ou '--help'). Arrêt normal du script et affichage de ce message.
+        105 : Nombre d'arguments insuffisant.
+            ➔ Consultez help.txt pour connaître les arguments requis.
+        106 : Nombre d'arguments trop élevé.
+            ➔ Consultez help.txt pour vérifier les arguments requis.
+        107 : Le fichier de données à traiter spécifié en deuxième argument n'existe pas.
+            ➔ Vérifiez le chemin du fichier et réessayez.
+        108 : Droit de lecture manquant sur le fichier de données à traiter.
+            ➔ Utilisez chmod pour corriger les permissions et permettre la lecture.
+        109 : Type de poste électrique invalide (hvb, hva, lv attendus).
+            ➔ Référez-vous à help.txt pour vérifier les arguments valides.
+        110 : Type de consommateur invalide (comp, indiv, all attendus).
+            ➔ Consultez help.txt pour vérifier les arguments valides.
+        111 : Consommateur invalide pour une station HV-B (comp requis).
+            ➔ Changez le type de consommateur en comp.
+        112 : Consommateur invalide pour une station HV-A (comp requis).
+            ➔ Changez le type de consommateur en comp.
+        113 : Numéro de centrale incorrect.
+            ➔ Consultez help.txt pour les numéros valides (1 à 5).
+        114 : Échec de compilation data (cible all du makefile en mode normal et cible debug en mode debug).
+            ➔ Vérifiez les erreurs dans make.log.
+        115 : Échec de compilation ratio (cible ratio du makefile).
+            ➔ Vérifiez les erreurs dans make.log.
+        116 : Échec de suppression des exécutables (cible all du makefile en mode normal et cible cleandebug en mode debug).
+            ➔ Vérifiez les erreurs dans make.log et supprimez manuellement les fichiers concernés.
+        117 : Échec de suppression de l'exécutable ratio (cible cleanratio du makefile).
+            ➔ Vérifiez les erreurs dans make.log et supprimez manuellement l'exécutable concerné.
+        118 : Échec de suppression des fichier tampons (cible cleanfile du makefile).
+            ➔ Vérifiez les erreurs dans make.log.
+    

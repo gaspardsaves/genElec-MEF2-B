@@ -86,3 +86,11 @@ Raccord du graphique GnuPlot LV min/max
 16 - 12 - 24 :
 Correction de la logique lv minmax tout est désormais fonctionnel.
 GnuPlot division en deux pour faciliter les traitements et clarifier les graphiques.
+
+21 - 12 - 24 :
+Correction des print
+Relecture générale
+Fin du commentaire du script shell
+Génération des fichiers tests
+Finalisation du README
+Rédaction du rapport
