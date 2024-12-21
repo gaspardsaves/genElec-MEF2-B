@@ -151,13 +151,13 @@
 
 # If it's necessary compilation of the ratio code C and check if it's successful
     if [[ "$typeCons" == "all" ]] ; then
-        echo "____ RATIO ____" >> make.log
-        echo "$(date): Compilation ratio" >> make.log
-        make ratio -C ./codeC >> make.log 2>&1
+        echo "____ RATIO LV____" >> make.log
+        echo "$(date): Compilation ratio lv" >> make.log
+        make ratiolv -C ./codeC >> make.log 2>&1
         if [ $? -eq 0 ]; then
-            echo "Compilation ratio réussie." >> make.log
+            echo "Compilation ratio lv réussie." >> make.log
         else
-            echo "Echec de compilation ratio. Voir erreurs dans le fichier make.log."
+            echo "Echec de compilation ratio lv. Voir erreurs dans le fichier make.log."
             exit 115
         fi
     fi
@@ -220,7 +220,7 @@
                         echo "Les 10 stations LV avec la plus forte sous-consommation et les 10 avec la plus forte surconsommation" >> "$outputMinmax"
                         echo "Station LV:Capacité:Consommation (tous)" >> "$outputMinmax"
                         # Calculation of capacity - consuption ratio using a C code, sort LV post by this ratio, and write it in a buffer file
-                        tail -n +2 "$outputFile" | ./codeC/execratio | sort -t ":" -k4,4n > "$buffGnuPlotLvMinmaxOver"
+                        tail -n +2 "$outputFile" | ./codeC/execratiolv | sort -t ":" -k4,4n > "$buffGnuPlotLvMinmaxOver"
                         # Write the top 10 under-consumed and over-consumed stations to the minmax buffer
                         head -n 10 "$buffGnuPlotLvMinmaxOver" >> "$buffLvMinmax"
                         tail -n 10 "$buffGnuPlotLvMinmaxOver" >> "$buffLvMinmax"
@@ -234,7 +234,7 @@
                         # Delete LV Minmax file
                         rm "$outputMinmax"
                         # Calculation of capacity - consuption ratio using a C code, sort LV post by this ratio, and write it in a buffer file
-                        tail -n +2 "$outputFile" | ./codeC/execratio | sort -t ":" -k4,4n > "$buffLvMinmax"
+                        tail -n +2 "$outputFile" | ./codeC/execratiolv | sort -t ":" -k4,4n > "$buffLvMinmax"
                         # Separate under-consumed and over-consumed stations into separate buffer files for gnuplot
                         awk -F ":" '$4 < 0' "$buffLvMinmax" | cut -d ":" -f1-3 | sort -t ":" -k2,2n > "$buffGnuPlotLvMinmaxOver"
                         awk -F ":" '$4 >= 0' "$buffLvMinmax" | cut -d ":" -f1-3 | sort -t ":" -k3,3n > "$buffGnuPlotLvMinmaxUnder"
@@ -254,7 +254,8 @@
                         echo "Erreur de génération du graphique des postes les moins chargés."
                     fi
                     # Generate pdf document with histograms and check if it's successful
-                    pdflatex -output-directory=latex '\def\imageunderload{'$graphLvMinmaxUnder'} \def\imageoverload{'$graphLvMinmaxOver'} \input{./latex/lv-pdf.tex}' > LaTeX.log 2>&1                    #pdflatex "\def\imageoverload{$IMAGE_OVERLOAD} \def\imageunderload{$} \input{document.tex}"
+                    pdflatex -output-directory=latex '\def\imageunderload{'$graphLvMinmaxUnder'} \def\imageoverload{'$graphLvMinmaxOver'} \input{./latex/lv-pdf.tex}' > LaTeX.log 2>&1
+                    # Delete auxiliary files
                     rm -f ./latex/*.aux ./latex/*.log
                     if [ $? -eq 0 ]; then
                         echo "PDF avec les graphiques généré avec succès."
@@ -321,13 +322,13 @@
     fi
 
     if [[ "$typeCons" == "all" ]] ; then
-        echo "____ CLEAN RATIO ____" >> make.log
-        echo "$(date): Suppression de l'exécutable ratio" >> make.log
-        make cleanratio -C ./codeC >> make.log 2>&1
+        echo "____ CLEAN RATIO LV____" >> make.log
+        echo "$(date): Suppression de l'exécutable ratio LV" >> make.log
+        make cleanratiolv -C ./codeC >> make.log 2>&1
         if [ $? -eq 0 ]; then
-            echo "Suppression de l'exécutable ratio réussie" >> make.log
+            echo "Suppression de l'exécutable ratio LV réussie" >> make.log
         else
-            echo "Echec de suppression de l'exécutable ratio. Voir erreurs dans le fichier make.log."
+            echo "Echec de suppression de l'exécutable ratio LV. Voir erreurs dans le fichier make.log."
             exit 117
         fi
     fi

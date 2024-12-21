@@ -20,7 +20,11 @@ Après passage en entrée des données d'un réseau de transport d'électricité
 - Installation de l'utilitaire gnuplot pour la réalisation des histogrammes  
 `gnuplot --version` pour vérifier s'il est installé sur votre machine  
 Son installation est facultative mais sans lui vous ne pourrez pas tester l'ensemble des fonctionnalités.  
-➔ S'il n'est pas installé l'exécution du script se fera correctement et un message vous annoncera que les histogrammes n'ont pas pu être réalisé mais les fichiers csv de sortie auront été générés correctement.
+➔ S'il n'est pas installé l'exécution du script se fera correctement et un message vous annoncera que les histogrammes n'ont pas pu être réalisé mais les fichiers csv de sortie auront été générés correctement.  
+- Installation d'une distribution TeX complète qui inclut l'outil pdflatex pour la réalisation du fichier LaTeX
+➔ Par exemple `texlive` sur Linux  
+`sudo apt install texlive texlive-latex-extra` pour l'installer  
+**Cette installation est obligatoire**  
 
 ## Exécution globale du projet :
 Vérifier la possession des droits d'exécution sur le script shell si ce n'est pas le cas : `chmod +x c-wire.sh`  
@@ -32,13 +36,17 @@ Si vous utilisez la v25 (9 millions de lignes) le temps de traitement maximum po
 **En fin d'exécution**  
 Un fichier `make.log` permet de constater les retours des commandes de compilation.  
 Le répertoire `outputs` contient les fichiers `.csv` générés lors de l'exécution.  
-:bar_chart: Le répertoire `graphs` contient les graphiques générés lors de l'exécution.  
+:bar_chart: Le répertoire `graphs` contient les éventuels graphiques générés lors de l'exécution.    
+Dans le cas lv all :  
+Le répertoire `latex` contient le fichier pdf des histogrammes  
+Un fichier `LaTeX.log` permet de constater les retours les retours de pdflatex lors de la génération du pdf.  
 
 ## Structure du projet :
 ### Répertoires :
 - Le répertoire `code C` contient l'ensemble des fichiers C et headers ainsi que le makefile du projet  
 - Le répertoire `graphs` contient, après exécution, les histogrammes générés par le programme  
 - Le répertoire `inputs` contient le petit fichier de démonstration (v00) vous pouvez y copier votre fichier de données  
+- Le répertoire `latex` contient le code LaTeX et, après exécution, le pdf contenant les histogrammes de charge  
 - Le répertoire `outputs` contient, après exécution, les fichiers `.csv` générés par le programme  
 - Le répertoire `tests` contient des exemples de fichiers et histogrammes de sortie pour la v00 et la v25 (Voir le [rapport de projet](rapport-projet-c-wire-mef2-b.pdf) pour plus de détails)  
 - Le répertoire `tmp` contient, pendant l'exécution, les éventuels fichiers tampons générés  

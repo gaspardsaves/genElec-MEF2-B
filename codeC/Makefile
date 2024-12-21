@@ -9,10 +9,15 @@ maintreatment.o: maintreatment.c maintreatment.h avl.h smartrobusnest.h structur
 execdata: smartrobusnest.o avl.o maintreatment.o
 	gcc smartrobusnest.o avl.o maintreatment.o -o execdata
 
-# Compilation of the ratio part
-ratio: execratio
-execratio: lvall.c
-	gcc -o execratio lvall.c
+# Compilation of the lv ratio part
+ratiolv: execratiolv
+execratiolv: lvall.c
+	gcc -o execratiolv lvall.c
+
+# Compilation of the hva-b ratio part
+ratiohvab: execratiohvab
+execratiohvab: hva-b-ratio.c
+	gcc -o execratiohvab hva-b-ratio.c
 
 # Compilation in debug mode using fsanitize and other options to check memory allocation and other errors
 debug: execdebug
@@ -31,8 +36,11 @@ clean:
 	rm smartrobusnest.o avl.o maintreatment.o
 	rm execdata
 
-cleanratio:
-	rm execratio
+cleanratiolv:
+	rm execratiolv
+
+cleanratiohvab:
+	rm execratiohvab
 
 # Delete execution files in debug mode
 cleandebug:

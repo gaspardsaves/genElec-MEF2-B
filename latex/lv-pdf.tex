@@ -1,24 +1,37 @@
-\documentclass{article}
+% Inclusion of packages and define type of document
+\documentclass[a4paper,12pt]{article}
 \usepackage{graphicx}
+\usepackage{geometry}
+\usepackage{caption}
+\usepackage{datetime2}
 
+% Set paper size and margins
+\geometry{
+    a4paper,
+    margin=2.5cm
+}
+
+% First page presentation
 \title{Histogrammes de charge LV}
-\date{\today}
+\date{\today\ à \DTMcurrenttime}
 
 \begin{document}
 
+% Generating title
 \maketitle
 
+% Display first histogram
 \begin{figure}
     \caption{Histogramme des postes en surcharge}
     \centering
-    %\includegraphics[width = 15cm, keepaspectratio]{.\imageoverload}
-    \includegraphics[width=\textwidth]{.\imageoverload}
+    \includegraphics[width=\textwidth, keepaspectratio]{.\imageoverload}
 \end{figure}
 
+% Display second histogram
 \begin{figure}
     \caption{Histogramme des postes en sous-charge}
     \centering
-    \includegraphics[width=\textwidth]{.\imageunderload}
+    \includegraphics[width=\textwidth, keepaspectratio]{.\imageunderload}
 \end{figure}
 
 \end{document}
