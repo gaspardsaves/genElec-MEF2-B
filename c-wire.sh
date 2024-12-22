@@ -178,6 +178,7 @@
                 buffGnuPlotLvMinmaxUnder=./tmp/buff_plt_${typeStation}_${typeCons}_${pwrPlantNbr}_minmax_underload.csv
                 graphLvMinmaxOver=./graphs/${typeStation}_${typeCons}_${pwrPlantNbr}_minmax_overload.png
                 graphLvMinmaxUnder=./graphs/${typeStation}_${typeCons}_${pwrPlantNbr}_minmax_underload.png
+                rapportLvPdf=${typeStation}_${typeCons}_${pwrPlantNbr}.pdf
             fi
         else
             outputFile=./outputs/${typeStation}_${typeCons}.csv
@@ -188,6 +189,7 @@
                 buffGnuPlotLvMinmaxUnder=./tmp/buff_plt_${typeStation}_${typeCons}_minmax_underload.csv
                 graphLvMinmaxOver=./graphs/${typeStation}_${typeCons}_minmax_overload.png
                 graphLvMinmaxUnder=./graphs/${typeStation}_${typeCons}_minmax_underload.png
+                rapportLvPdf=${typeStation}_${typeCons}.pdf
             fi
         fi
         > "$outputFile"
@@ -240,14 +242,14 @@
                         awk -F ":" '$4 >= 0' "$buffLvMinmax" | cut -d ":" -f1-3 | sort -t ":" -k3,3n > "$buffGnuPlotLvMinmaxUnder"
                     fi
                     # Generate histogram of the most loaded LV stations using gnuplot and check if it's successful
-                    gnuplot -e "dataFile='${buffGnuPlotLvMinmaxOver}'; graphOutput='${graphLvMinmaxOver}'" script-gnuplot-lv-neg.plt
+                    gnuplot -e "dataFile='${buffGnuPlotLvMinmaxOver}'; graphOutput='${graphLvMinmaxOver}'" script-gnuplot-lv-overload.plt
                     if [ $? -eq 0 ]; then
                         echo "Construction du graphique des postes les plus chargés réussie."
                     else
                         echo "Erreur de génération du graphique des postes les plus chargés."
                     fi
                     # Generate histogram of the least loaded LV stations using gnuplot and check if it's successful
-                    gnuplot -e "dataFile='${buffGnuPlotLvMinmaxUnder}'; graphOutput='${graphLvMinmaxUnder}'" script-gnuplot-lv-pos.plt
+                    gnuplot -e "dataFile='${buffGnuPlotLvMinmaxUnder}'; graphOutput='${graphLvMinmaxUnder}'" script-gnuplot-lv-underload.plt
                     if [ $? -eq 0 ]; then
                         echo "Construction du graphique des postes les moins chargés réussie."
                     else
@@ -255,14 +257,16 @@
                     fi
                     # Generate pdf document with histograms and check if it's successful
                     pdflatex -output-directory=latex '\def\imageunderload{'$graphLvMinmaxUnder'} \def\imageoverload{'$graphLvMinmaxOver'} \input{./latex/lv-pdf.tex}' > LaTeX.log 2>&1
-                    # Delete auxiliary files
-                    rm -f ./latex/*.aux ./latex/*.log
                     if [ $? -eq 0 ]; then
                         echo "PDF avec les graphiques généré avec succès."
                     else
                         echo "Erreur lors de la génération du fichier PDF."
                         exit 119
                     fi
+                    # Delete auxiliary files
+                    rm -f ./latex/*.aux ./latex/*.log
+                    # Move and change the name of the output pdf
+                    mv latex/lv-pdf.pdf "outputs/${rapportLvPdf}"
                 ;;
                 'comp' )
                     # Company consumer data

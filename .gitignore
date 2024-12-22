@@ -2,4 +2,5 @@ inputs/*.dat
 *.log
 tmp/*.csv
 outputs/*.csv
+outputs/*.pdf
 graphs/*.png

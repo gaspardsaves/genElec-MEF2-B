@@ -46,8 +46,8 @@ Un fichier `LaTeX.log` permet de constater les retours les retours de pdflatex l
 - Le répertoire `code C` contient l'ensemble des fichiers C et headers ainsi que le makefile du projet  
 - Le répertoire `graphs` contient, après exécution, les histogrammes générés par le programme  
 - Le répertoire `inputs` contient le petit fichier de démonstration (v00) vous pouvez y copier votre fichier de données  
-- Le répertoire `latex` contient le code LaTeX et, après exécution, le pdf contenant les histogrammes de charge  
-- Le répertoire `outputs` contient, après exécution, les fichiers `.csv` générés par le programme  
+- Le répertoire `latex` contient le code LaTeX permettant de générer le fichier récapitulatif avec les histogrammes.
+- Le répertoire `outputs` contient, après exécution, le(s) fichier(s) `.csv` générés par le programme ainsi que le rapport pdf avec les histogrammes dans le cadre de `lv all` 
 - Le répertoire `tests` contient des exemples de fichiers et histogrammes de sortie pour la v00 et la v25 (Voir le [rapport de projet](rapport-projet-c-wire-mef2-b.pdf) pour plus de détails)  
 - Le répertoire `tmp` contient, pendant l'exécution, les éventuels fichiers tampons générés  
 
@@ -64,9 +64,9 @@ Un fichier `LaTeX.log` permet de constater les retours les retours de pdflatex l
 ## :hammer: Makefile / Compilation :
 Si vous souhaitez compiler et gérer le code C séparément cela est possible en utilisant les commandes :  
 `make -C ./codeC`  l'exécutable principal s'appelle alors `execdata`  
-`make ratio -C ./codeC` le deuxième exécutable s'appelle alors `execratio` (utile pour `lv all`)   
+`make ratiolv -C ./codeC` le deuxième exécutable s'appelle alors `execratiolv` (utile pour `lv all`)   
 `make clean -C ./codeC` permet de supprimer les éxécutables  
-`make cleanratio -C ./codeC` permet de supprimer l'exécutable ratio (utile pour `lv all`)  
+`make cleanratiolv -C ./codeC` permet de supprimer l'exécutable ratiolv (utile pour `lv all`)  
 `make cleanfile -C ./codeC` permet des supprimer les fichiers tampons générés lors de l'exécution  
 
 ### :hammer_and_wrench: Cible débug

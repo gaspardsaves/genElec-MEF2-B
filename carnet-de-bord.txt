@@ -1,30 +1,27 @@
-GEN ELEC – CARNET DE BORD 
+GEN ELEC – CARNET DE BORD
 
 18 – 11 – 2024 :  
+Première réunion : Nous prenons connaissance du pdf qui nous a été fourni et réflechissons à l'architecture de notre code.
+Nous pensons qu'il faut réaliser plusieurs structures d'arbres imbriquées les unes dans les autres et qu'il faut équilibrer chaque sous-arbre.
+Nous pensons réussir à trouver la façon de générer l’arbre et ses sous-arbres en pouvant tous les équilibrer.
+Nous pensons finalement créer plusieurs structures : HVA, HVB, LV, Consommateur avec un id pour savoir si le consommateur est un particulier ou une entreprise. 
+Après cette phase de réflexion nous nous accordons sur l’environnement dans lequel nous allons développer le projet (vs code  et github desktop).
 
-Première réunion : on se morfond dans la complexité du pdf qui nous a été fourni
-On a réussi à trouver la façon de générer l’arbre en pouvant tout de même l’équilibrer. 
-Le problème qui dérangeait était que lors de l’opération d’équilibrage de l’arbre des particuliers risquaient de se trouver relier au mauvais LV ou des etp au mauvais HV-A/HV-A. La solution trouver est d’équilibrer seulement des sous arbre de consommateurs.
-On pense finalement crée plusieurs structures : HVA, HVB, LV, Consommateur avec un id pour savoir si on le conso est un particulier ou une etp. 
-Après cette phase de réflexion nous nous accordons sur l’environnement dans lequel nous allons coder notre projet (vs code  et github desktop).
-
-Nous nous rendons compte de nos incompréhensions le projet est un peu plus facile qu'envisagé
-Nous rédigeons alors les structures.
-
+19 - 11 - 24 :
+Nous nous rendons compte de nos incompréhensions, le projet est un peu plus facile qu'envisagé (pas d'arbres imbriqués les uns dans les autres).
+Nous rédigeons alors une seule sructure AVL
 
 1 - 12 - 2024 :
-
-On se décide à créer un avl pour chaque type de structures (HVA, HVB, LV). On pense crée des fichiers tampons qui permettraient de gérer chacun des types d'AVL.
-Nous en sommes finalement venu à se demander s'il était mieux de faire une ou plusieurs structures d'arbres.
-Séparation des tâches et avancement des travaux
-Ibra et JL sur les AVL
+Nous pensons créer des fichiers tampons qui permettraient de récupérer les données nécessaires.
+Séparation des tâches :
+Ibrahima et Jean-Luc sur les AVL
 Gaspard sur le shell pour récupérer les LV, les HVA et les HVB (id et capacité) sur des fichiers tampons exploitables dans un second temps par le code C
 Gaspard gère aussi le makefile et les headers ainsi que les tests qui sont faits sur des petites et des grosses quantités de données et s'assure de leur bon traitement dans un temps correct
 Des problèmes de complexité se posent très rapidement sur le traitement des données par le script shell
 
 2 -12 - 24 :
-Modif header structures pour traiter une entité électrique sans se soucier de ce que c'est et de même pour compter le consommation
-Modif shell pour utiliser grep et ne pas avoir de boucle ce qui améliore significativement la complexité
+Modification header structures pour traiter une entité électrique sans se soucier de ce que c'est et de même pour compter le consommation
+Modification shell pour utiliser grep et ne pas avoir de boucle ce qui améliore significativement la complexité
 Implémentation de l'aide dans les paramétres du script et rédaction du fichier d'aide.
 Rédaction du code AVL équilibrage et rotation
 
@@ -94,3 +91,7 @@ Fin du commentaire du script shell
 Génération des fichiers tests
 Finalisation du README
 Rédaction du rapport
+Implémentation du rapport LaTeX
+
+22 - 12 - 24 :
+Remplacement de quelques fichiers du répertoire tests par d'autres plus pertinents.
