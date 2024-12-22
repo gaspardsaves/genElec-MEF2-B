@@ -35,31 +35,29 @@ Si vous utilisez la v25 (9 millions de lignes) le temps de traitement maximum po
 
 **En fin d'exécution**  
 Un fichier `make.log` permet de constater les retours des commandes de compilation.  
-Le répertoire `outputs` contient les fichiers `.csv` générés lors de l'exécution.  
-:bar_chart: Le répertoire `graphs` contient les éventuels graphiques générés lors de l'exécution.    
-Dans le cas lv all :  
-Le répertoire `latex` contient le fichier pdf des histogrammes  
-Un fichier `LaTeX.log` permet de constater les retours les retours de pdflatex lors de la génération du pdf.  
+Le répertoire [outputs](outputs/) contient les fichiers `.csv` générés lors de l'exécution ainsi que le pdf des histogrammes dans le cadre de la commande `lv all`.  
+:bar_chart: Le répertoire [graphs](graphs/) contient les éventuels graphiques générés lors de l'exécution.       
+Un fichier `LaTeX.log` permet de constater les retours les retours de pdflatex lors de la génération du pdf dans le cas `lv all`.  
 
 ## Structure du projet :
 ### Répertoires :
-- Le répertoire `code C` contient l'ensemble des fichiers C et headers ainsi que le makefile du projet  
-- Le répertoire `graphs` contient, après exécution, les histogrammes générés par le programme  
-- Le répertoire `inputs` contient le petit fichier de démonstration (v00) vous pouvez y copier votre fichier de données  
-- Le répertoire `latex` contient le code LaTeX permettant de générer le fichier récapitulatif avec les histogrammes.
-- Le répertoire `outputs` contient, après exécution, le(s) fichier(s) `.csv` générés par le programme ainsi que le rapport pdf avec les histogrammes dans le cadre de `lv all` 
-- Le répertoire `tests` contient des exemples de fichiers et histogrammes de sortie pour la v00 et la v25 (Voir le [rapport de projet](rapport-projet-c-wire-mef2-b.pdf) pour plus de détails)  
-- Le répertoire `tmp` contient, pendant l'exécution, les éventuels fichiers tampons générés  
+- Le répertoire [codeC](codeC/)  contient l'ensemble des fichiers C et headers ainsi que le makefile du projet  
+- Le répertoire [graphs](graphs/) contient, après exécution, les histogrammes générés par le programme  
+- Le répertoire [inputs](inputs/) contient le petit fichier de démonstration (v00) vous pouvez y copier votre fichier de données  
+- Le répertoire [latex](latex/) contient le code LaTeX permettant de générer le fichier récapitulatif avec les histogrammes.
+- Le répertoire [outputs](outputs/) contient, après exécution, le(s) fichier(s) `.csv` générés par le programme ainsi que le rapport pdf avec les histogrammes dans le cadre de `lv all` 
+- Le répertoire [tests](tests/)contient des exemples de fichiers et histogrammes de sortie pour la v00 et la v25 (Voir le [rapport de projet](rapport-projet-c-wire-mef2-b.pdf) pour plus de détails)  
+- Le répertoire [tmp](tmp/) contient, pendant l'exécution, les éventuels fichiers tampons générés  
 
 ### A la racine : 
-`c-wire.sh` est le script shell principal du projet  
-`carnet-de-bord.txt` est le fichier de suivi des collaborateurs, il nous permettait de voir le travail menés par les autres.  
-`help.txt` est le fichier contenant l'aide concernant l'exécution du script  
-`Projet_C-Wire_preIng2_2024_2025-v1.4-1.pdf` est le sujet du projet  
-`rapport-projet-c-wire-mef2-b.pdf` est le rapport de réalisation du projet  
-`resau.png` est l'image qui s'affiche ici dans les descriptif du projet  
-`script-gnuplot-lv-neg.plt` est le script gnuplot permettant la génération de l'histogramme des postes LV en surcharge  
-`script-gnuplot-lv-pos.plt` est le script gnuplot permettant la génération de l'histogramme des postes LV en sous-charge  
+[c-wire.sh](c-wire.sh) est le script shell principal du projet  
+[carnet-de-bord.txt](carnet-de-bord.txt) est le fichier de suivi des collaborateurs, il nous permettait de suivre le travail menés par les autres.  
+[help.txt](help.txt) est le fichier contenant l'aide utilisateur pour l'exécution du script  
+[Projet_C-Wire_preIng2_2024_2025-v1.4-1.pdf](Projet_C-Wire_preIng2_2024_2025-v1.4-1.pdf) est le sujet du projet  
+[rapport-projet-c-wire-mef2-b.pdf](rapport-projet-c-wire-mef2-b.pdf) est le rapport de réalisation du projet  
+[resau.png](resau.png) est l'image qui s'affiche ici dans les descriptif du projet  
+[script-gnuplot-lv-overload.plt](script-gnuplot-lv-overload.plt) est le script gnuplot permettant la génération de l'histogramme des postes LV en surcharge  
+[script-gnuplot-lv-underload.plt](script-gnuplot-lv-underload.plt`) est le script gnuplot permettant la génération de l'histogramme des postes LV en sous-charge  
 
 ## :hammer: Makefile / Compilation :
 Si vous souhaitez compiler et gérer le code C séparément cela est possible en utilisant les commandes :  
