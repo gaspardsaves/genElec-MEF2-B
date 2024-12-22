@@ -95,3 +95,5 @@ Implémentation du rapport LaTeX
 
 22 - 12 - 24 :
 Remplacement de quelques fichiers du répertoire tests par d'autres plus pertinents.
+Relecture finale
+Rajout du rapport

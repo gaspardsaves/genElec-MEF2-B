@@ -14,11 +14,6 @@ ratiolv: execratiolv
 execratiolv: lvall.c
 	gcc -o execratiolv lvall.c
 
-# Compilation of the hva-b ratio part
-ratiohvab: execratiohvab
-execratiohvab: hva-b-ratio.c
-	gcc -o execratiohvab hva-b-ratio.c
-
 # Compilation in debug mode using fsanitize and other options to check memory allocation and other errors
 debug: execdebug
 smartrobusnest1.o: smartrobusnest.c smartrobusnest.h
@@ -38,9 +33,6 @@ clean:
 
 cleanratiolv:
 	rm execratiolv
-
-cleanratiohvab:
-	rm execratiohvab
 
 # Delete execution files in debug mode
 cleandebug:

@@ -99,5 +99,9 @@ Index des codes d'erreurs de sortie et solutions éventuelles :
         118 : Échec de suppression des fichier tampons (cible cleanfile du makefile).
             ➔ Vérifiez les erreurs dans make.log.
         119 : Échec de génération du fichier pdf avec les histogrammes LV.
-            ➔ Vérifiez les erreurs dans LaTeX.log.
-            
+            ➔ Vérifiez les erreurs dans LaTeX.log et vérifiez que vous avez installé l'utilitaire 'pdflatex' et les bibliothèques requises.
+        120 : Échec de génération de l'histogrammes des postes LV en surcharge.
+            ➔ Vérifiez l'installation de l'utilitaire GnuPlot. Vérifiez qu'il y a au moins 2 postes à traiter.
+        121 : Échec de génération de l'histogrammes des postes LV en sous-charge.
+            ➔ Vérifiez l'installation de l'utilitaire GnuPlot. Vérifiez qu'il y a au moins 2 postes à traiter.
+                

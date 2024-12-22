@@ -14,24 +14,24 @@
 
 Ce projet réalise un traitement ciblé des données d'un réseau de transport d'électricité.  
 ![Aperçu d'un réseau électrique](reseau.png)  
-Après passage en entrée des données d'un réseau de transport d'électricité, le script permet d'analyser les postes électriques (stations HV-B et HV-A et postes LV) ainsi que leurs consommations respectives afin de savoir quelle proportion de leur énergie est consommée par les entreprises et les particuliers et s'ils sont en situation de sous-charge ou de surcharge. Les données peuvent également être triées en fonction de la centrale sur laquelle les postes électriques sont branchés.
+Après passage en entrée d'un fichier de données d'un réseau de transport d'électricité, le script permet d'analyser les postes électriques (stations HV-B et HV-A et postes LV) ainsi que leurs consommations respectives afin de savoir quelle proportion de leur énergie est consommée par les entreprises et les particuliers et s'ils sont en situation de sous-charge ou de surcharge. Les données peuvent également être triées en fonction de la centrale sur laquelle les postes électriques sont branchés.
 
-## Pré-requis :
-- Installation de l'utilitaire gnuplot pour la réalisation des histogrammes  
-`gnuplot --version` pour vérifier s'il est installé sur votre machine  
-Son installation est facultative mais sans lui vous ne pourrez pas tester l'ensemble des fonctionnalités.  
-➔ S'il n'est pas installé l'exécution du script se fera correctement et un message vous annoncera que les histogrammes n'ont pas pu être réalisé mais les fichiers csv de sortie auront été générés correctement.  
+## Pré-requis pour l'utilisation :
+- Installation de l'utilitaire GnuPlot pour la réalisation des histogrammes  
+    `gnuplot --version` pour vérifier s'il est installé sur votre machine   
+    `sudo apt install gnuplot` pour l'installer   
 - Installation d'une distribution TeX complète qui inclut l'outil pdflatex pour la réalisation du fichier LaTeX
-➔ Par exemple `texlive` sur Linux  
-`sudo apt install texlive texlive-latex-extra` pour l'installer  
-**Cette installation est obligatoire**  
+    ➔ Par exemple `texlive` sur Linux  
+    `sudo apt install texlive texlive-latex-extra` pour l'installer avec les bibliothèques que nous utilisons.   
+**Ces deux utilitaire sont obligatoires pour pouvoir utiliser la commande `lv all` de ce projet**   
 
 ## Exécution globale du projet :
 Vérifier la possession des droits d'exécution sur le script shell si ce n'est pas le cas : `chmod +x c-wire.sh`  
 Exécution du script shell : `./c-wire.sh` + paramètres  
 ➔ Pour avoir le détail des paramétres possibles du script : possibilité d'utiliser l'option `-h` ou `--help` (commandes `./c-wire.sh -h` ou `./c-wire.sh --help` afin d'afficher l'aide)  
 Un petit fichier de données permettant d'utiliser le programme se trouve dans le dossier *inputs* pour l'utiliser passer `./inputs/c-wire_v00.dat` en premier argument du script. Avec ce fichier de données, peu importe les paramètres choisis, les temps de traitements sont de l'ordre de l'instantané.  
-Si vous utilisez la v25 (9 millions de lignes) le temps de traitement maximum pour `lv all` avec la génération des graphiques est de l'ordre de 12 secondes sur nos machines comme sur les machines de l'école.  
+Si vous utilisez la v25 (9 millions de lignes) le temps de traitement maximum pour `lv all` avec la génération des graphiques et du rapport pdf est de l'ordre de 12 secondes sur nos machines comme sur les machines de l'école.  
+La commande dont le temps de traitement est la plus longue est `lv indiv` avec un peu moins de 14 secondes.  
 
 **En fin d'exécution**  
 Un fichier `make.log` permet de constater les retours des commandes de compilation.  
@@ -55,7 +55,7 @@ Un fichier `LaTeX.log` permet de constater les retours les retours de pdflatex l
 [help.txt](help.txt) est le fichier contenant l'aide utilisateur pour l'exécution du script  
 [Projet_C-Wire_preIng2_2024_2025-v1.4-1.pdf](Projet_C-Wire_preIng2_2024_2025-v1.4-1.pdf) est le sujet du projet  
 [rapport-projet-c-wire-mef2-b.pdf](rapport-projet-c-wire-mef2-b.pdf) est le rapport de réalisation du projet  
-[resau.png](resau.png) est l'image qui s'affiche ici dans les descriptif du projet  
+[resau.png](resau.png) est l'image qui s'affiche ici dans le descriptif du projet  
 [script-gnuplot-lv-overload.plt](script-gnuplot-lv-overload.plt) est le script gnuplot permettant la génération de l'histogramme des postes LV en surcharge  
 [script-gnuplot-lv-underload.plt](script-gnuplot-lv-underload.plt`) est le script gnuplot permettant la génération de l'histogramme des postes LV en sous-charge  
 

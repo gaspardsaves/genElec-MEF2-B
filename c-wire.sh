@@ -247,6 +247,7 @@
                         echo "Construction du graphique des postes les plus chargés réussie."
                     else
                         echo "Erreur de génération du graphique des postes les plus chargés."
+                        exit 120
                     fi
                     # Generate histogram of the least loaded LV stations using gnuplot and check if it's successful
                     gnuplot -e "dataFile='${buffGnuPlotLvMinmaxUnder}'; graphOutput='${graphLvMinmaxUnder}'" script-gnuplot-lv-underload.plt
@@ -254,6 +255,7 @@
                         echo "Construction du graphique des postes les moins chargés réussie."
                     else
                         echo "Erreur de génération du graphique des postes les moins chargés."
+                        exit 121
                     fi
                     # Generate pdf document with histograms and check if it's successful
                     pdflatex -output-directory=latex '\def\imageunderload{'$graphLvMinmaxUnder'} \def\imageoverload{'$graphLvMinmaxOver'} \input{./latex/lv-pdf.tex}' > LaTeX.log 2>&1
