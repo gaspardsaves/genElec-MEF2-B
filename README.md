@@ -38,7 +38,7 @@ Ce projet vise à analyser les données d’un réseau de transport d’électri
 
 ## 🚀 Exécution
 
-1. Donner les droits d'exécution au script :  
+1. Attribuer les droits d'exécution au script :  
    `chmod +x c-wire.sh`
 
 2. Lancer le script avec les paramètres souhaités :  
@@ -69,11 +69,11 @@ genElec-MEF2-B/
 │   │
 │   ├── avl.c               # Fonctions utilitaires de l'arbre AVL
 │   ├── avl.h
-│   ├── lvall.c             # Code source calcul du ratio des poste LV (commande 'lv all')
+│   ├── lvall.c             # Code source calcul du ratio des postes LV (commande 'lv all')
 │   ├── maintreatment.c     # Fonctions principales du traitement des données
 │   ├── maintreatment.h
 │   ├── Makefile
-│   ├── smartrobusnest.c    # Fonctions utilitaires de robustesse
+│   ├── smartrobusnest.c    # Fonctions de robustesse
 │   ├── smartrobusnest.h
 │   └── structures.h        # Définition de la structure de l'AVL
 │
